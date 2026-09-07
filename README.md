@@ -26,9 +26,17 @@ category, build a request, and submit it. On submit the app:
 2. saves the order to a **Supabase** database,
 3. sends an **email** notification (EmailJS).
 
+**Customers** can optionally make an account (**حسابي** tab — phone + password,
+no email needed) to watch their order move through the pipeline in real time.
+Ordering without an account still works; signing up later links past orders by
+phone number.
+
 Masaken staff open a hidden **admin panel** (tap the "Masaken" logo 5×, then sign
-in) to see incoming orders and move them through the status pipeline
-`pending → contacted → confirmed → supervised → done`.
+in with a staff email) to see **all** orders and move them through the pipeline
+`pending → contacted → confirmed → supervised → done`. Only accounts in the
+`admins` table can open it. To add a team member: create their login in
+Supabase → Authentication → Users, then run the `insert into public.admins …`
+snippet at the top of `supabase/02_customer_accounts.sql`.
 
 Everything here runs on **free tiers**: Supabase (database + auth) and a static
 host (Netlify / Cloudflare Pages / GitHub Pages).
@@ -47,7 +55,8 @@ masaken-app/
 │   ├── icon.svg             app icon
 │   └── _headers             security headers (Cloudflare Pages / Netlify)
 ├── supabase/
-│   └── schema.sql           run once in the Supabase SQL editor
+│   ├── schema.sql              run first in the Supabase SQL editor
+│   └── 02_customer_accounts.sql  run second — accounts + order tracking
 ├── docs/
 │   ├── masaken_pricelist.xlsx
 │   └── ORIGINAL_HANDOFF.md
@@ -72,17 +81,26 @@ public can only *create* orders, never read customer data or change statuses.
 ### 2. Create the database
 
 1. In the project: **SQL Editor → New query**.
-2. Paste the entire contents of [`supabase/schema.sql`](supabase/schema.sql) and
-   click **Run**. It creates the `orders` table, the security policies, the
-   `create_order()` function, and enables realtime.
+2. Run [`supabase/schema.sql`](supabase/schema.sql) — creates the `orders` table,
+   `create_order()`, base security, realtime.
+3. Run [`supabase/02_customer_accounts.sql`](supabase/02_customer_accounts.sql) —
+   adds the `admins` allowlist, `orders.user_id`, customer-scoped security, and
+   `link_my_orders()`.
 
-### 3. Create the staff logins
+### 3. Auth settings + staff logins
 
-1. **Authentication → Providers → Email**: turn **off**
-   *"Allow new users to sign up"* (you only want hand-made accounts).
-2. **Authentication → Users → Add user → Create new user**. Enter an email and
-   password for each Masaken team member who should see orders. Tick
-   *"Auto Confirm User"*.
+1. **Authentication → Sign In / Providers → Email**:
+   - **Allow new users to sign up** → **ON** (customers register themselves)
+   - **Confirm email** → **OFF** (phone accounts have no real inbox)
+2. **Authentication → Users → Add user → Create new user**: email + password for
+   each staff member, tick *Auto Confirm User*.
+3. For **each** staff user, run in the SQL editor:
+   ```sql
+   insert into public.admins (id, email)
+   select id, email from auth.users where email = 'them@example.com';
+   ```
+   (Without this a staff login sees no orders — only customers in `admins` can
+   open the panel.)
 
 ### 4. Wire the app to the project
 
