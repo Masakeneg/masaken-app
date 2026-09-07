@@ -280,6 +280,15 @@
     A live order went through to the database on both. Netlify stays live too, for anyone outside Egypt.
   </div>
 
+  <div class="callout" style="margin-bottom:14px;">
+    <b>حسابي is now a real feature.</b> Customers can make an account (phone + password) and
+    watch their order move through the pipeline live. Guest checkout still works. Staff
+    still sign into the admin panel with a staff email &mdash; and that login only opens the
+    panel if the account is in the <code>admins</code> table (bootstrapped with
+    <code>mustafaghonim95@gmail.com</code>; see <code>supabase/02_customer_accounts.sql</code>
+    to add more).
+  </div>
+
   <div class="callout" style="margin-bottom:36px; border-left-color:var(--flag);">
     <b>Open items</b><br>
     &bull; <b>Smoke test on your phone:</b> open the github.io URL, place an order, tap the logo
