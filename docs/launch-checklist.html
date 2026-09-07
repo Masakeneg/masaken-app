@@ -1,0 +1,679 @@
+<title>Masaken Launch Checklist</title>
+<meta name="description" content="Step-by-step runbook to take the Masaken order app live on Supabase and Netlify.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#FAF6EC;
+    --raised:#FFFFFF;
+    --sunk:#F1E9D6;
+    --ink:#1C1C1A;
+    --ink-soft:#5C5647;
+    --ink-faint:#8B8168;
+    --line:#DED3BC;
+    --line-strong:#C9BB9A;
+    --brass:#A97B35;
+    --brass-bright:#C9A05C;
+    --forest:#0C291F;
+    --forest-mark:#2F6B4F;
+    --flag:#9C3B2E;
+    --flag-bg:#F6E4DE;
+    --shadow:0 1px 2px rgba(28,28,26,.06), 0 8px 24px rgba(28,28,26,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141311;
+      --raised:#1E1C18;
+      --sunk:#100F0D;
+      --ink:#EFE6D4;
+      --ink-soft:#B7AD95;
+      --ink-faint:#877E66;
+      --line:#332F27;
+      --line-strong:#463F32;
+      --brass:#C9A05C;
+      --brass-bright:#E0BE86;
+      --forest:#1C3A2D;
+      --forest-mark:#5FB08A;
+      --flag:#D98A78;
+      --flag-bg:#3A211B;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141311;
+    --raised:#1E1C18;
+    --sunk:#100F0D;
+    --ink:#EFE6D4;
+    --ink-soft:#B7AD95;
+    --ink-faint:#877E66;
+    --line:#332F27;
+    --line-strong:#463F32;
+    --brass:#C9A05C;
+    --brass-bright:#E0BE86;
+    --forest:#1C3A2D;
+    --forest-mark:#5FB08A;
+    --flag:#D98A78;
+    --flag-bg:#3A211B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none!important;} }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Cairo', system-ui, -apple-system, sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 22px 120px; }
+
+  /* ---------- header ---------- */
+  header{ padding:52px 0 26px; }
+  .brandmark{
+    display:inline-flex; align-items:baseline; gap:9px;
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700;
+    font-size:15px; letter-spacing:.02em; color:var(--ink);
+    padding:5px 12px; border:1px solid var(--line-strong); border-radius:999px;
+  }
+  .brandmark .ar{ font-size:17px; color:var(--brass); }
+  h1{
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-weight:700; font-size:2.5rem; line-height:1.12; letter-spacing:-.015em;
+    margin:22px 0 14px; text-wrap:balance;
+  }
+  .lede{ font-size:1.075rem; color:var(--ink-soft); max-width:60ch; margin:0; }
+  .meta{
+    margin-top:22px; display:flex; flex-wrap:wrap; gap:8px 10px;
+    font-family:'IBM Plex Mono', monospace; font-size:.78rem;
+  }
+  .meta span{
+    padding:4px 10px; border-radius:6px; background:var(--sunk);
+    color:var(--ink-soft); border:1px solid var(--line);
+  }
+
+  /* ---------- progress ---------- */
+  .progress{
+    position:sticky; top:0; z-index:10;
+    margin:0 -22px 40px; padding:13px 22px;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:14px;
+  }
+  .progress .track{ flex:1; height:6px; border-radius:999px; background:var(--sunk); overflow:hidden; }
+  .progress .fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--brass), var(--brass-bright)); transition:width .35s ease; }
+  .progress .count{ font-family:'IBM Plex Mono', monospace; font-size:.8rem; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .progress button{
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--ink-faint);
+    background:none; border:1px solid var(--line); border-radius:6px; padding:4px 8px; cursor:pointer;
+  }
+  .progress button:hover{ color:var(--flag); border-color:var(--flag); }
+
+  /* ---------- phase ---------- */
+  .phase{ display:grid; grid-template-columns:44px 1fr; gap:18px; position:relative; }
+  .phase + .phase{ margin-top:14px; }
+  .rail{ display:flex; flex-direction:column; align-items:center; }
+  .rail .num{
+    width:44px; height:44px; flex-shrink:0; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace; font-size:.95rem; font-weight:500;
+    color:var(--brass); background:var(--raised);
+    border:1.5px solid var(--line-strong); box-shadow:var(--shadow);
+  }
+  .rail .thread{ flex:1; width:1.5px; background:var(--line); margin:6px 0; }
+  .phase:last-of-type .rail .thread{ display:none; }
+  .phase.done .rail .num{ color:var(--raised); background:var(--forest-mark); border-color:var(--forest-mark); }
+
+  .body{ padding-bottom:34px; min-width:0; }
+  .body h2{
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700;
+    font-size:1.3rem; margin:9px 0 4px; letter-spacing:-.01em;
+  }
+  .body .aim{ margin:0 0 16px; color:var(--ink-faint); font-size:.92rem; }
+
+  .step{
+    display:grid; grid-template-columns:26px 1fr; gap:12px;
+    padding:14px 0; border-top:1px solid var(--line);
+  }
+  .step:first-of-type{ border-top:none; }
+  .step input[type="checkbox"]{
+    appearance:none; -webkit-appearance:none; margin:2px 0 0;
+    width:22px; height:22px; border:1.5px solid var(--line-strong); border-radius:6px;
+    background:var(--raised); cursor:pointer; flex-shrink:0; position:relative;
+    transition:background .15s, border-color .15s;
+  }
+  .step input[type="checkbox"]:checked{ background:var(--forest-mark); border-color:var(--forest-mark); }
+  .step input[type="checkbox"]:checked::after{
+    content:""; position:absolute; left:7px; top:3px; width:5px; height:10px;
+    border:solid var(--raised); border-width:0 2px 2px 0; transform:rotate(42deg);
+  }
+  .step input[type="checkbox"]:focus-visible{ outline:2px solid var(--brass); outline-offset:2px; }
+  .step .txt{ min-width:0; }
+  .step .txt > p{ margin:0; }
+  .step .txt > p:has(+ p){ margin-bottom:7px; }
+  .step p + p{ margin-top:7px; }
+  .step.checked .txt > p:first-child{ color:var(--ink-faint); text-decoration:line-through; text-decoration-color:var(--line-strong); }
+
+  code{
+    font-family:'IBM Plex Mono', monospace; font-size:.86em;
+    background:var(--sunk); padding:1.5px 5px; border-radius:4px; border:1px solid var(--line);
+    word-break:break-word;
+  }
+  .path{ color:var(--brass); }
+  strong{ font-weight:700; }
+  em{ font-style:normal; background:linear-gradient(transparent 62%, color-mix(in srgb, var(--brass-bright) 38%, transparent) 62%); padding:0 1px; }
+  a{ color:var(--brass); text-underline-offset:2px; }
+
+  /* nav-path breadcrumb inside Supabase/Netlify */
+  .navpath{
+    font-family:'IBM Plex Mono', monospace; font-size:.8rem; color:var(--ink-soft);
+    background:var(--sunk); border:1px solid var(--line); border-radius:6px;
+    padding:6px 10px; display:inline-block; margin:3px 0;
+  }
+  .navpath b{ color:var(--ink); font-weight:500; }
+
+  /* hand-off flag */
+  .flag{
+    display:inline-flex; align-items:center; gap:6px; margin:8px 0 2px;
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:.06em;
+    color:var(--flag); background:var(--flag-bg);
+    border:1px solid color-mix(in srgb, var(--flag) 40%, transparent);
+    padding:3px 9px; border-radius:999px;
+  }
+  .flag::before{ content:"●"; font-size:.6em; }
+
+  /* code block */
+  .snip{ margin:12px 0 2px; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:var(--sunk); }
+  .snip .snip-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 8px 6px 12px; border-bottom:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--ink-faint);
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  .snip pre{
+    margin:0; padding:12px; overflow-x:auto;
+    font-family:'IBM Plex Mono', monospace; font-size:.82rem; line-height:1.6; color:var(--ink);
+  }
+  .snip.sql pre{ font-size:.76rem; max-height:300px; overflow-y:auto; }
+  .copy{
+    font-family:'IBM Plex Mono', monospace; font-size:.7rem; cursor:pointer;
+    background:var(--raised); color:var(--ink-soft); border:1px solid var(--line-strong);
+    border-radius:5px; padding:4px 9px; white-space:nowrap;
+  }
+  .copy:hover{ color:var(--brass); border-color:var(--brass); }
+  .copy.ok{ color:var(--forest-mark); border-color:var(--forest-mark); }
+
+  .callout{
+    margin:14px 0 2px; padding:12px 14px; border-radius:9px;
+    background:var(--sunk); border:1px solid var(--line); border-left:3px solid var(--brass);
+    font-size:.9rem; color:var(--ink-soft);
+  }
+  .callout b{ color:var(--ink); }
+
+  footer{
+    margin-top:56px; padding-top:24px; border-top:1px solid var(--line);
+    color:var(--ink-faint); font-size:.9rem;
+  }
+  .done-banner{
+    margin-top:30px; padding:20px; border-radius:12px; text-align:center;
+    background:var(--raised); border:1.5px solid var(--forest-mark); box-shadow:var(--shadow);
+    display:none;
+  }
+  .done-banner.show{ display:block; }
+  .done-banner .big{ font-family:'IBM Plex Sans Arabic',sans-serif; font-weight:700; font-size:1.15rem; color:var(--ink); }
+  .done-banner .ar{ color:var(--brass); }
+
+  @media (max-width:560px){
+    h1{ font-size:2rem; }
+    .wrap{ padding:0 16px 100px; }
+    .progress{ margin-left:-16px; margin-right:-16px; padding-left:16px; padding-right:16px; }
+    .phase{ grid-template-columns:34px 1fr; gap:13px; }
+    .rail .num{ width:34px; height:34px; font-size:.82rem; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="brandmark"><span class="ar">مساكن</span> Masaken</span>
+    <h1>Taking the app live</h1>
+    <p class="lede">Everything from an empty Supabase account to <code>app.masakeneg.com</code> serving real orders. Work top to bottom &mdash; each phase depends on the one before it.</p>
+    <div class="meta">
+      <span>~15 min hands-on</span>
+      <span>+ provisioning waits</span>
+      <span>cost: $0</span>
+      <span>repo: C:\Users\mmmm\Documents\masaken-app</span>
+    </div>
+  </header>
+
+  <div class="progress" role="status" aria-label="Checklist progress">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <span class="count" id="count">0 / 0</span>
+    <button id="reset" type="button">reset</button>
+  </div>
+
+  <div class="callout" style="margin-bottom:36px;">
+    The <b class="path">●</b> <b>hand-off</b> marker means <b>you</b> do that bit &mdash; a login, a password, an OAuth approval, a DNS change. I can&rsquo;t do those, and shouldn&rsquo;t. Everything else is just clicking where it says.
+  </div>
+
+  <!-- ============ PHASE 1 ============ -->
+  <section class="phase" id="p1">
+    <div class="rail"><div class="num">1</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Create the Supabase project</h2>
+      <p class="aim">This is the database + login system. Free plan is enough.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p><span class="flag">hand-off</span></p>
+          <p>Go to <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> and sign in (GitHub sign-in is the quickest). Create the account if you don&rsquo;t have one.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Click <em>New project</em>. Pick your personal org (or create one &mdash; free).</p></span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Fill the form:</p>
+          <p>&bull; <strong>Name</strong>: <code>masaken</code><br>
+             &bull; <strong>Database Password</strong>: click <em>Generate a password</em>, then copy it somewhere safe. <span class="flag">hand-off</span> &mdash; you won&rsquo;t need it day to day, but you can&rsquo;t recover it later.<br>
+             &bull; <strong>Region</strong>: <code>Central EU (Frankfurt)</code> &mdash; closest to Egypt.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Click <em>Create new project</em> and wait ~2 minutes for it to finish setting up. The dashboard opens when it&rsquo;s ready.</p></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 2 ============ -->
+  <section class="phase" id="p2">
+    <div class="rail"><div class="num">2</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Build the database</h2>
+      <p class="aim">One script creates the orders table, the security rules, and the order-submission function.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>In the left sidebar open the <span class="navpath"><b>SQL Editor</b></span>, then click <em>New query</em>.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Paste the whole script below and click <em>Run</em> (or press <code>Ctrl</code>+<code>Enter</code>). You want <em>&ldquo;Success. No rows returned&rdquo;</em>.</p>
+          <p>It&rsquo;s also saved in your repo at <code class="path">supabase\schema.sql</code> if you&rsquo;d rather open the file.</p>
+          <div class="snip sql">
+            <div class="snip-head"><span>schema.sql</span><button class="copy" data-copy="sql">copy</button></div>
+            <pre id="sql">-- Masaken App - database schema. Safe to re-run.
+
+create table if not exists public.orders (
+  id           uuid        primary key default gen_random_uuid(),
+  seq          bigint      generated always as identity,
+  created_at   timestamptz not null default now(),
+  phone        text        not null,
+  address      text        not null,
+  notes        text,
+  items        jsonb       not null default '[]'::jsonb,
+  client_date  text,
+  status       text        not null default 'pending'
+               check (status in ('pending','contacted','confirmed','supervised','done'))
+);
+
+create index if not exists orders_seq_idx        on public.orders (seq desc);
+create index if not exists orders_created_at_idx on public.orders (created_at desc);
+
+alter table public.orders enable row level security;
+
+drop policy if exists "team can read orders"   on public.orders;
+drop policy if exists "team can update orders"  on public.orders;
+
+create policy "team can read orders"
+  on public.orders for select to authenticated using (true);
+
+create policy "team can update orders"
+  on public.orders for update to authenticated using (true) with check (true);
+
+create or replace function public.create_order(
+  p_phone text, p_address text, p_notes text, p_items jsonb, p_client_date text
+)
+returns table (id uuid, seq bigint)
+language plpgsql security definer set search_path = public
+as $$
+declare
+  v_phone   text := btrim(coalesce(p_phone, ''));
+  v_address text := btrim(coalesce(p_address, ''));
+begin
+  if length(v_phone) < 6 or length(v_phone) > 20 then raise exception 'invalid phone'; end if;
+  if length(v_address) < 3 or length(v_address) > 400 then raise exception 'invalid address'; end if;
+  if p_items is null or jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0
+    then raise exception 'no items'; end if;
+  if jsonb_array_length(p_items) > 60 then raise exception 'too many items'; end if;
+
+  return query
+  insert into public.orders (phone, address, notes, items, client_date)
+  values (v_phone, v_address,
+          nullif(btrim(coalesce(p_notes, '')), ''),
+          p_items,
+          nullif(btrim(coalesce(p_client_date, '')), ''))
+  returning orders.id, orders.seq;
+end;
+$$;
+
+revoke all on function public.create_order(text, text, text, jsonb, text) from public;
+grant execute on function public.create_order(text, text, text, jsonb, text) to anon, authenticated;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'orders'
+  ) then
+    alter publication supabase_realtime add table public.orders;
+  end if;
+end $$;</pre>
+          </div>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Check it landed: open <span class="navpath"><b>Table Editor</b></span> &mdash; you should see an empty <code>orders</code> table with a little shield icon (row-level security on).</p>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 3 ============ -->
+  <section class="phase" id="p3">
+    <div class="rail"><div class="num">3</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Lock down sign-ups, add your team</h2>
+      <p class="aim">Only people you add by hand should be able to see customer orders.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Open <span class="navpath"><b>Authentication</b> &rsaquo; <b>Sign In / Providers</b></span> (older UI: <b>Providers</b>). Under <strong>Email</strong>, turn <em>off</em> <strong>Allow new users to sign up</strong>. Save.</p>
+          <p>Can&rsquo;t find the toggle? It may sit under <span class="navpath"><b>Authentication</b> &rsaquo; <b>Configuration</b> &rsaquo; <b>User Signups</b></span>.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p><span class="flag">hand-off</span></p>
+          <p>Open <span class="navpath"><b>Authentication</b> &rsaquo; <b>Users</b></span> &rarr; <em>Add user</em> &rarr; <em>Create new user</em>. For each staff member: enter their email + a password, tick <strong>Auto Confirm User</strong>, create. Give each person their email + password &mdash; that&rsquo;s their admin-panel login.</p>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 4 ============ -->
+  <section class="phase" id="p4">
+    <div class="rail"><div class="num">4</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Connect the app to the project</h2>
+      <p class="aim">Two values from Supabase go into one file.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>In Supabase open <span class="navpath"><b>Project Settings</b> &rsaquo; <b>API Keys</b></span> (or <b>Data API</b> for the URL). Note two things:</p>
+          <p>&bull; <strong>Project URL</strong> &mdash; like <code>https://abcdefgh.supabase.co</code><br>
+             &bull; the <strong>anon / public</strong> key &mdash; a long string starting <code>eyJ&hellip;</code> (or a newer one starting <code>sb_publishable_&hellip;</code>). <strong>Not</strong> the <code>service_role</code> / secret key.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Open <code class="path">public\config.js</code> in the repo and replace the two placeholder lines:</p>
+          <div class="snip">
+            <div class="snip-head"><span>public/config.js</span><button class="copy" data-copy="cfg">copy</button></div>
+            <pre id="cfg">  SUPABASE_URL: 'https://abcdefgh.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOi...your-anon-key...',</pre>
+          </div>
+          <p>Leave the WhatsApp number and EmailJS values as they are. Save.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Quick local test. In a terminal:</p>
+          <div class="snip">
+            <div class="snip-head"><span>terminal</span><button class="copy" data-copy="serve">copy</button></div>
+            <pre id="serve">cd C:\Users\mmmm\Documents\masaken-app
+npx serve public</pre>
+          </div>
+          <p>Open the printed address, place a test order, then check <span class="navpath"><b>Table Editor</b> &rsaquo; <b>orders</b></span> in Supabase &mdash; your test row should be there. (If <code>npx</code> isn&rsquo;t available, skip this and rely on the post-deploy check in phase 8.)</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Commit the change:</p>
+          <div class="snip">
+            <div class="snip-head"><span>terminal</span><button class="copy" data-copy="commit">copy</button></div>
+            <pre id="commit">git add public/config.js
+git commit -m "Wire config to live Supabase project"</pre>
+          </div>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 5 ============ -->
+  <section class="phase" id="p5">
+    <div class="rail"><div class="num">5</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Put the code on GitHub</h2>
+      <p class="aim">Netlify deploys from a GitHub repo and redeploys on every push.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p><span class="flag">hand-off</span></p>
+          <p>At <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a>: name it <code>masaken-app</code>, set it <strong>Private</strong>, leave everything else unchecked (no README, no .gitignore), click <em>Create repository</em>.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Back in the terminal, connect and push (swap in your GitHub username):</p>
+          <div class="snip">
+            <div class="snip-head"><span>terminal</span><button class="copy" data-copy="push">copy</button></div>
+            <pre id="push">git remote add origin https://github.com/YOUR-USERNAME/masaken-app.git
+git push -u origin master</pre>
+          </div>
+          <p><span class="flag">hand-off</span> &mdash; Git will ask you to sign in to GitHub the first time (a browser window, or a username + personal-access-token).</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Refresh the GitHub repo page &mdash; you should see the <code>public/</code>, <code>supabase/</code>, <code>docs/</code> folders and the README.</p></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 6 ============ -->
+  <section class="phase" id="p6">
+    <div class="rail"><div class="num">6</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Deploy on Netlify</h2>
+      <p class="aim">No build step &mdash; it just serves the <code>public</code> folder. The repo&rsquo;s <code>netlify.toml</code> already says so.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p><span class="flag">hand-off</span></p>
+          <p>Sign in at <a href="https://app.netlify.com" target="_blank" rel="noopener">app.netlify.com</a> (use <em>Sign in with GitHub</em>).</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Click <em>Add new site</em> &rarr; <em>Import an existing project</em> &rarr; <em>Deploy with GitHub</em>.</p>
+          <p><span class="flag">hand-off</span> &mdash; Netlify asks GitHub for access. Approve it, and either grant it all repos or just <code>masaken-app</code>.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Pick <code>masaken-app</code> from the list. On the settings screen, confirm &mdash; it should already be filled from <code>netlify.toml</code>:</p>
+          <p>&bull; <strong>Build command</strong>: empty<br>
+             &bull; <strong>Publish directory</strong>: <code>public</code></p>
+          <p>Click <em>Deploy masaken-app</em>. First build takes ~30 seconds.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Open the <code>&hellip;.netlify.app</code> link Netlify gives you. The app should load. Rename the site if you like under <span class="navpath"><b>Site configuration</b> &rsaquo; <b>Change site name</b></span>.</p>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 7 ============ -->
+  <section class="phase" id="p7">
+    <div class="rail"><div class="num">7</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Point the domain</h2>
+      <p class="aim">Optional, but it&rsquo;s what clients will type. Skip if you&rsquo;re happy with the <code>.netlify.app</code> address for now.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>In Netlify: <span class="navpath"><b>Domain management</b> &rsaquo; <b>Add a domain</b></span> &rarr; enter <code>app.masakeneg.com</code> &rarr; <em>Verify</em> &rarr; <em>Add domain</em>.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p><span class="flag">hand-off</span></p>
+          <p>Netlify shows a DNS record to add. At whoever hosts <code>masakeneg.com</code> DNS (registrar or host control panel), add a <strong>CNAME</strong>: name <code>app</code>, value the <code>&hellip;.netlify.app</code> target Netlify names. Save.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>Wait for it to go green in Netlify (minutes to a few hours). Netlify issues the HTTPS certificate automatically once DNS resolves &mdash; no action needed.</p>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 8 ============ -->
+  <section class="phase" id="p8">
+    <div class="rail"><div class="num">8</div><div class="thread"></div></div>
+    <div class="body">
+      <h2>Final checks</h2>
+      <p class="aim">Prove the whole loop works before you hand it to anyone.</p>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>On the live site, place a real test order. WhatsApp should open with a prefilled message.</p></span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>In Supabase <span class="navpath"><b>SQL Editor</b></span>, run this &mdash; your order should be the top row:</p>
+          <div class="snip">
+            <div class="snip-head"><span>verify</span><button class="copy" data-copy="verify">copy</button></div>
+            <pre id="verify">select seq, phone, address, status, created_at
+from public.orders order by seq desc limit 5;</pre>
+          </div>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>On the live site, tap the <strong>Masaken</strong> logo 5 times &rarr; sign in with a staff account from phase 3. Your test order should show in the panel.</p></span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Change that order&rsquo;s status in the panel, refresh the page &mdash; the new status sticks.</p></span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Check the notification email arrived at <code>masakendesigns@outlook.com</code>. If not, it&rsquo;s just EmailJS &mdash; orders are still safe in the database. See <code class="path">README.md</code> &rarr; EmailJS.</p></span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt"><p>Delete the test order: in <span class="navpath"><b>Table Editor</b></span>, select the row &rarr; delete. (Deletes only work from the dashboard, never from the app &mdash; by design.)</p></span>
+      </label>
+    </div>
+  </section>
+
+  <div class="done-banner" id="doneBanner">
+    <div class="big">That&rsquo;s the whole thing live. <span class="ar">مبروك</span></div>
+  </div>
+
+  <footer>
+    Stuck on a step or an error message &mdash; tell me which phase and paste what you see. I can check the SQL result, your <code>config.js</code>, the Netlify build log, or the first order end to end.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY = 'masaken-launch-checklist-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.step input[type="checkbox"]'));
+  var fill = document.getElementById('fill');
+  var count = document.getElementById('count');
+  var doneBanner = document.getElementById('doneBanner');
+
+  boxes.forEach(function(b, i){ b.id = 'step-' + i; });
+
+  function load(){
+    var saved = {};
+    try{ saved = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ saved = {}; }
+    boxes.forEach(function(b, i){ b.checked = !!saved[i]; });
+  }
+  function save(){
+    var out = {};
+    boxes.forEach(function(b, i){ if(b.checked) out[i] = 1; });
+    try{ localStorage.setItem(KEY, JSON.stringify(out)); }catch(e){}
+  }
+  function refresh(){
+    var n = boxes.filter(function(b){ return b.checked; }).length;
+    var total = boxes.length;
+    fill.style.width = (total ? (n/total*100) : 0) + '%';
+    count.textContent = n + ' / ' + total;
+    boxes.forEach(function(b){ b.closest('.step').classList.toggle('checked', b.checked); });
+    document.querySelectorAll('.phase').forEach(function(ph){
+      var local = Array.prototype.slice.call(ph.querySelectorAll('.step input[type="checkbox"]'));
+      ph.classList.toggle('done', local.length > 0 && local.every(function(b){ return b.checked; }));
+    });
+    doneBanner.classList.toggle('show', n === total && total > 0);
+  }
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){ save(); refresh(); });
+  });
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('Clear all checkmarks?')) return;
+    boxes.forEach(function(b){ b.checked = false; });
+    save(); refresh();
+  });
+
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      if(!el) return;
+      var text = el.textContent;
+      navigator.clipboard.writeText(text).then(function(){
+        var old = btn.textContent;
+        btn.textContent = 'copied'; btn.classList.add('ok');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+      }).catch(function(){
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      });
+    });
+  });
+
+  load();
+  refresh();
+})();
+</script>
