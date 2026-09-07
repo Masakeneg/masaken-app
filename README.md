@@ -1,5 +1,17 @@
 # Masaken App — مساكن
 
+## Live URLs
+
+| URL | Host | Notes |
+|-----|------|-------|
+| **https://masakeneg.github.io/masaken-app/** | GitHub Pages | **Use this one.** Reachable in Egypt. Auto-deploys on push to `master`. |
+| https://masaken-app.netlify.app/ | Netlify | Works outside Egypt; `netlify.app` is ISP-filtered inside Egypt. Also auto-deploys. |
+
+Both serve the same code from this repo. Repo: `github.com/Masakeneg/masaken-app`.
+Backend: Supabase project `aorxrwwpexsfodnjbzub` (Masakeneg org).
+
+---
+
 Client-facing finishing-order app for Masaken. Clients browse finishing items by
 category, build a request, and submit it. On submit the app:
 
