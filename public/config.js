@@ -3,19 +3,19 @@
  * ------------------------------------
  * This file is safe to commit and safe to serve publicly.
  *
- *  - SUPABASE_ANON_KEY is a *public* key by design. The database is protected
- *    by Row Level Security (see supabase/schema.sql): the public can only
- *    create orders, never read or edit them. Reading/editing requires a
- *    Masaken team login.
+ *  - SUPABASE_ANON_KEY is a *public* key by design (here, a "publishable" key).
+ *    The database is protected by Row Level Security (see supabase/schema.sql):
+ *    the public can only create orders, never read or edit them. Reading/editing
+ *    requires a Masaken team login.
  *  - The EmailJS public key is likewise meant for the browser.
  *
- * Fill in the two Supabase values after creating your project
- * (Project Settings → API). Everything else is already set for Masaken.
+ * Project: "mustafaghonim95@gmail.com's Project" in the Masakeneg org.
+ * These values come from Supabase → Connect → .env.local.
  */
 window.MASAKEN_CONFIG = {
   // ---- Supabase (backend) ----
-  SUPABASE_URL: 'https://YOUR-PROJECT-REF.supabase.co',
-  SUPABASE_ANON_KEY: 'YOUR-PUBLIC-ANON-KEY',
+  SUPABASE_URL: 'https://aorxrwwpexsfodnjbzub.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_1Zu0XLZBuzhrX8pPwqRatQ_rnDit-rJ',
 
   // ---- WhatsApp (orders open a prefilled chat to this number) ----
   WHATSAPP_NUMBER: '201202992442', // international format, no + or spaces
