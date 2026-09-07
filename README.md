@@ -36,12 +36,16 @@ their order move through the pipeline in real time — from the welcome screen o
 the **حسابي** tab later. Ordering as a guest still works; signing up links past
 guest orders by phone number.
 
-Masaken staff open a hidden **admin panel** (tap the "Masaken" logo 5×, then sign
-in with a staff email) to see **all** orders and move them through the pipeline
-`pending → contacted → confirmed → supervised → done`. Only accounts in the
-`admins` table can open it. To add a team member: create their login in
-Supabase → Authentication → Users, then run the `insert into public.admins …`
-snippet at the top of `supabase/02_customer_accounts.sql`.
+**Masaken staff** sign in from the **حسابي** tab with their **email + password**
+(the same login box customers use with a phone number). An account that's in the
+`admins` table then sees **إدارة الطلبات → فتح لوحة الطلبات**: every order with
+its items, address, phone, **the client's notes**, and a status control
+(`pending → contacted → confirmed → supervised → done`). The old tap-the-logo-5×
+gesture still works as a shortcut.
+
+To add a team member: create their login in Supabase → Authentication → Users,
+then run the `insert into public.admins …` snippet at the top of
+`supabase/02_customer_accounts.sql`.
 
 Everything here runs on **free tiers**: Supabase (database + auth) and a static
 host (Netlify / Cloudflare Pages / GitHub Pages).
