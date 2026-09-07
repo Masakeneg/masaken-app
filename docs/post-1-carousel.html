@@ -1,0 +1,276 @@
+<title>Masaken Launch Carousel</title>
+<meta name="description" content="Post 1 — the 6-slide launch carousel for Instagram &amp; Facebook, with caption ready to paste.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#F6F1E7;
+    --paper-2:#EFE8D8;
+    --ink:#1C1C1A;
+    --ink-soft:#5C5647;
+    --line:#DED3BC;
+    --brass:#A97B35;
+    --brass-bright:#C9A05C;
+    --forest:#0C291F;
+    --page-bg:#EAE3D2;
+    --card:#FFFFFF;
+    --card-line:#DED3BC;
+    --heading:#1C1C1A;
+    --muted:#6b6455;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page-bg:#15140F; --card:#1E1C17; --card-line:#33302A;
+      --heading:#EFE6D4; --muted:#9A9078;
+    }
+  }
+  :root[data-theme="dark"]{
+    --page-bg:#15140F; --card:#1E1C17; --card-line:#33302A;
+    --heading:#EFE6D4; --muted:#9A9078;
+  }
+
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--page-bg); color:var(--heading);
+    font-family:'Cairo', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:1000px; margin:0 auto; padding:44px 20px 100px; }
+
+  .kicker{ font-family:'IBM Plex Mono', monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); }
+  h1{ font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:2.1rem; margin:10px 0 6px; letter-spacing:-.01em; }
+  .sub{ color:var(--muted); font-size:1rem; margin:0 0 8px; max-width:60ch; }
+  h2{ font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:1.25rem; margin:44px 0 14px; }
+
+  .slides{ display:flex; flex-direction:column; gap:22px; align-items:center; }
+
+  /* ---- one carousel slide: 4:5, everything sized off the slide width ---- */
+  .slide{
+    width:100%; max-width:520px; aspect-ratio:4/5;
+    container-type:inline-size;
+    position:relative; overflow:hidden;
+    border:1px solid var(--card-line); border-radius:10px;
+    background:
+      repeating-linear-gradient(0deg, rgba(28,28,26,.045) 0 1px, transparent 1px 6.2%),
+      repeating-linear-gradient(90deg, rgba(28,28,26,.045) 0 1px, transparent 1px 6.2%),
+      var(--paper);
+    color:var(--ink);
+    display:flex; flex-direction:column;
+    box-shadow:0 8px 30px rgba(0,0,0,.10);
+  }
+  .slide.dark{
+    background:
+      repeating-linear-gradient(0deg, rgba(246,241,231,.05) 0 1px, transparent 1px 6.2%),
+      repeating-linear-gradient(90deg, rgba(246,241,231,.05) 0 1px, transparent 1px 6.2%),
+      var(--ink);
+    color:var(--paper);
+  }
+  .slide .pad{ position:absolute; inset:0; padding:8.5cqw 8.5cqw 9cqw; display:flex; flex-direction:column; }
+
+  /* corner brackets */
+  .slide .pad::before, .slide .pad::after{
+    content:""; position:absolute; width:5cqw; height:5cqw; border:0.55cqw solid var(--brass); opacity:.8;
+  }
+  .slide .pad::before{ top:3.6cqw; right:3.6cqw; border-bottom:none; border-left:none; }
+  .slide .pad::after{ bottom:3.6cqw; left:3.6cqw; border-top:none; border-right:none; }
+
+  .s-top{ display:flex; align-items:baseline; justify-content:space-between; }
+  .s-brand{ font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:3.6cqw; letter-spacing:.02em; }
+  .s-brand b{ color:var(--brass); }
+  .slide.dark .s-brand b{ color:var(--brass-bright); }
+  .s-num{ font-family:'IBM Plex Mono', monospace; font-size:3cqw; color:var(--muted); }
+  .slide.dark .s-num{ color:#9a9078; }
+
+  .s-mid{ flex:1; display:flex; flex-direction:column; justify-content:center; direction:rtl; text-align:right; }
+
+  .eyebrow{ font-family:'Cairo', sans-serif; font-weight:700; font-size:4cqw; color:var(--brass); margin-bottom:3.5cqw; }
+  .slide.dark .eyebrow{ color:var(--brass-bright); }
+
+  .headline{
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700;
+    font-size:10.4cqw; line-height:1.24; letter-spacing:-.01em; color:var(--heading);
+    text-wrap:balance;
+  }
+  .slide.dark .headline{ color:var(--paper); }
+  .headline.big{ font-size:12.6cqw; line-height:1.18; }
+  .headline .q{ display:block; }
+  .headline .q + .q{ margin-top:1.6cqw; }
+
+  .support{ font-family:'Cairo', sans-serif; font-weight:600; font-size:5cqw; line-height:1.6; color:var(--ink-soft); margin-top:4.5cqw; max-width:88%; }
+  .slide.dark .support{ color:#cfc6ae; }
+
+  .dimline{ width:34cqw; height:3.6cqw; margin:5cqw 0 0; }
+  .dimline path{ fill:none; stroke:var(--brass); stroke-width:1.6; stroke-linecap:square; }
+
+  .badge{
+    width:14cqw; height:14cqw; border-radius:50%; border:0.7cqw solid var(--brass);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:7.4cqw; color:var(--brass);
+    margin-bottom:5cqw;
+  }
+  .slide.dark .badge{ border-color:var(--brass-bright); color:var(--brass-bright); }
+
+  .steps{ font-family:'Cairo', sans-serif; font-weight:700; font-size:4.6cqw; line-height:1.9; color:#cfc6ae; margin-top:5cqw; }
+  .steps .arw{ color:var(--brass-bright); padding:0 1.4cqw; }
+
+  .s-bot{ display:flex; align-items:flex-end; justify-content:space-between; direction:rtl; gap:4cqw; margin-top:3cqw; }
+  .s-cta{ font-family:'Cairo', sans-serif; font-weight:700; font-size:3.9cqw; line-height:1.5; color:var(--muted); max-width:64%; }
+  .slide.dark .s-cta{ color:#cfc6ae; }
+  .s-swipe{ font-family:'Cairo', sans-serif; font-weight:700; font-size:3.6cqw; color:var(--brass); white-space:nowrap; }
+  .slide.dark .s-swipe{ color:var(--brass-bright); }
+
+  /* caption block */
+  .capbox{ margin:18px 0; border:1px solid var(--card-line); border-radius:12px; overflow:hidden; background:var(--card); }
+  .capbox .cap-hd{ display:flex; align-items:center; justify-content:space-between; padding:8px 10px 8px 14px; border-bottom:1px solid var(--card-line); }
+  .capbox .cap-label{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .copy{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; cursor:pointer; background:var(--page-bg); color:var(--muted); border:1px solid var(--card-line); border-radius:6px; padding:5px 11px; }
+  .copy:hover{ color:var(--brass); border-color:var(--brass); }
+  .copy.ok{ color:#2F6B4F; border-color:#2F6B4F; }
+  .capbox pre{ margin:0; padding:16px 18px; white-space:pre-wrap; word-break:break-word;
+    font-family:'Cairo', sans-serif; font-size:1rem; line-height:1.9; color:var(--heading); direction:rtl; text-align:right; }
+
+  .note{ margin:14px 0; padding:13px 15px; border-radius:10px; background:var(--card); border:1px solid var(--card-line);
+    border-inline-start:3px solid var(--brass); font-size:.94rem; color:var(--ink-soft); }
+  .note b{ color:var(--heading); }
+  .note code{ font-family:'IBM Plex Mono', monospace; font-size:.86em; background:var(--page-bg); padding:1px 5px; border-radius:4px; }
+  ol{ padding-inline-start:20px; } li{ margin:6px 0; }
+</style>
+
+<div class="wrap">
+  <div class="kicker">Masaken · Post 1 of the launch</div>
+  <h1>كاروسيل الإطلاق</h1>
+  <p class="sub">6 سلايدات لإنستجرام وفيسبوك. مقاس 4:5 (1080×1350). صوّر كل سلايد من موبايلك، أو خُد اسكرين شوت — الخط والألوان مظبوطة على هوية التطبيق.</p>
+
+  <h2>السلايدات</h2>
+  <div class="slides">
+
+    <!-- 1 — cover -->
+    <div class="slide" id="s1">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">1 / 6</span></div>
+        <div class="s-mid">
+          <div class="eyebrow">تطبيق مساكن للتشطيبات</div>
+          <div class="headline big">تشطيب شقتك…<span class="q">من غير وجع دماغ</span></div>
+          <svg class="dimline" viewBox="0 0 340 16" preserveAspectRatio="none"><path d="M6 8 H334 M6 2 V14 M334 2 V14"/></svg>
+        </div>
+        <div class="s-bot"><span class="s-cta">اعرف إزاي</span><span class="s-swipe">اسحب ←</span></div>
+      </div>
+    </div>
+
+    <!-- 2 — the fear -->
+    <div class="slide" id="s2">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">2 / 6</span></div>
+        <div class="s-mid">
+          <div class="eyebrow">بتدوّر على مقاول وخايف؟</div>
+          <div class="headline big">
+            <span class="q">السعر يزيد؟</span>
+            <span class="q">الشغل يبوظ؟</span>
+            <span class="q">حد يختفي؟</span>
+          </div>
+        </div>
+        <div class="s-bot"><span class="s-cta">مساكن حلّت التلاتة ←</span><span class="s-swipe"></span></div>
+      </div>
+    </div>
+
+    <!-- 3 — solution 1 -->
+    <div class="slide" id="s3">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">3 / 6</span></div>
+        <div class="s-mid">
+          <div class="badge">١</div>
+          <div class="headline">السعر قدامك من الأول</div>
+          <div class="support">كل بند وسعره واضح قبل ما تبدأ — دهانات، أرضيات، جبس بورد، كهرباء، سباكة، مطابخ، حمامات. من غير مفاجآت في الآخر.</div>
+        </div>
+        <div class="s-bot"><span class="s-cta"></span><span class="s-swipe">اسحب ←</span></div>
+      </div>
+    </div>
+
+    <!-- 4 — solution 2 -->
+    <div class="slide" id="s4">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">4 / 6</span></div>
+        <div class="s-mid">
+          <div class="badge">٢</div>
+          <div class="headline">مهندس بيشرف على كل خطوة</div>
+          <div class="support">مهندس مدني بيتابع تنفيذ شغلك بند بند — من أول يوم لحد ما تستلم وأنت مطمن.</div>
+        </div>
+        <div class="s-bot"><span class="s-cta"></span><span class="s-swipe">اسحب ←</span></div>
+      </div>
+    </div>
+
+    <!-- 5 — solution 3 -->
+    <div class="slide" id="s5">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">5 / 6</span></div>
+        <div class="s-mid">
+          <div class="badge">٣</div>
+          <div class="headline">الدفع عند الاستلام</div>
+          <div class="support">تعاين الشغل، تتأكد إن كل حاجة زي ما اتفقنا، وبعدين تدفع. مش قبل كده.</div>
+        </div>
+        <div class="s-bot"><span class="s-cta"></span><span class="s-swipe">اسحب ←</span></div>
+      </div>
+    </div>
+
+    <!-- 6 — CTA -->
+    <div class="slide dark" id="s6">
+      <div class="pad">
+        <div class="s-top"><span class="s-brand">Masaken <b>مساكن</b></span><span class="s-num">6 / 6</span></div>
+        <div class="s-mid">
+          <div class="headline big">ابدأ طلبك<span class="q">من موبايلك</span></div>
+          <div class="steps">افتح التطبيق <span class="arw">←</span> اختار البند <span class="arw">←</span> ابعت على واتساب</div>
+        </div>
+        <div class="s-bot"><span class="s-cta">هيتصل بيك مهندس يأكد السعر والميعاد</span><span class="s-swipe">☝ الرابط في البايو</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>الكابشن — جاهز للنسخ</h2>
+  <div class="capbox">
+    <div class="cap-hd"><span class="cap-label">caption</span><button class="copy" data-t="cap">نسخ</button></div>
+    <pre id="cap">تشطيب الشقة بياخد من الناس صحتها قبل فلوسها 😮‍💨
+
+عشان كده عملنا تطبيق مساكن — كل اللي بتخاف منه في التشطيب، حلّيناه:
+
+✅ سعر كل بند قدامك قبل ما تبدأ — دهانات، أرضيات، جبس بورد، كهرباء، سباكة، أبواب وشبابيك، مطابخ، حمامات
+✅ مهندس مدني بيتابع التنفيذ خطوة بخطوة لحد التسليم
+✅ الدفع عند الاستلام — بعد ما تعاين وتطمن
+✅ الطلب كله من موبايلك، وبيوصلنا على واتساب على طول
+
+جرّب دلوقتي 👉 الرابط في البايو
+
+#تشطيبات #تشطيب_شقق #تشطيب_شقتك #تشطيب_شقة_الجواز #ديكور #اسعار_التشطيب #اشراف_هندسي #التجمع_الخامس #الشيخ_زايد #العاصمة_الادارية #مساكن</pre>
+  </div>
+
+  <div class="note">
+    <b>أول كومنت (مهم):</b> إنستجرام مش بيخلّي الروابط تشتغل في الكابشن، فحطّ الرابط أول كومنت وثبّته:
+    <br><code>ابدأ طلبك من هنا: masakeneg.github.io/masaken-app</code>
+  </div>
+
+  <h2>إزاي تطلّعها صور</h2>
+  <ol>
+    <li>افتح الصفحة دي من الموبايل.</li>
+    <li>لكل سلايد: اسكرين شوت، وبعدين قصّه على حدود الكارت (الشكل مربّع مايل للطول 4:5).</li>
+    <li>ارفعهم بالترتيب 1 ← 6 في بوست واحد (كاروسيل) على إنستجرام وفيسبوك.</li>
+    <li>عايز الصور جاهزة بمقاس 1080×1350 من غير قص؟ قولّي وأبعتهملك ملفات PNG.</li>
+  </ol>
+
+  <div class="note">
+    عايز تغيّر أي جملة؟ الكلام كله معدّل بسهولة — قولّي السلايد والجملة الجديدة.
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el = document.getElementById(btn.getAttribute('data-t'));
+    if(!el) return;
+    navigator.clipboard.writeText(el.textContent).then(function(){
+      var o = btn.textContent; btn.textContent='اتنسخ ✓'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); }, 1600);
+    }).catch(function(){
+      var r=document.createRange(); r.selectNodeContents(el);
+      var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  });
+});
+</script>
