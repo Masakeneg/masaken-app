@@ -45,7 +45,7 @@
   }
   .statusbar{
     height:34px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 26px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--charcoal);
+    padding:0 26px; font-family:'IBM Plex Mono','Cairo',monospace; font-size:12px; color:var(--charcoal);
     flex-shrink:0;
   }
   .screens{ position:relative; flex:1; overflow:hidden; }
@@ -109,7 +109,7 @@
   }
   .cat-card .icon{ font-size:20px; color:var(--mark, var(--gold)); }
   .cat-card .name{ color:var(--cream); font-weight:700; font-size:14px; }
-  .cat-card .count{ color:var(--mark, var(--gold-light)); font-family:'IBM Plex Mono',monospace; font-size:11px; }
+  .cat-card .count{ color:var(--mark, var(--gold-light)); font-family:'IBM Plex Mono','Cairo',monospace; font-size:11px; }
 
   .item-row{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
@@ -118,7 +118,12 @@
   .item-info{ flex:1; min-width:0; }
   .item-name{ font-weight:700; font-size:14px; color:var(--charcoal); }
   .item-desc{ font-size:12px; color:#847c6b; margin-top:3px; line-height:1.5; }
-  .item-price{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--gold); margin-top:6px; }
+  /* A price is a Latin number + Arabic unit — render it as one left-to-right
+     run, right-aligned, so bidi can't reorder the currency or split units. */
+  .item-price{ font-family:'IBM Plex Mono','Cairo',monospace; font-size:12.5px; color:var(--gold); margin-top:6px;
+    direction:ltr; text-align:right; unicode-bidi:isolate; }
+  .summary-row .num, .invoice-line .num{ direction:ltr; unicode-bidi:isolate; }
+  .admin-order .items{ unicode-bidi:isolate; }
   .add-btn{
     width:34px; height:34px; border-radius:10px; border:none; background:var(--charcoal); color:var(--cream);
     font-size:18px; cursor:pointer; flex-shrink:0; display:flex;align-items:center;justify-content:center;
@@ -145,7 +150,7 @@
     box-shadow:0 12px 24px rgba(0,0,0,.25); cursor:pointer; z-index:4;
   }
   .fab-cart .l{ font-size:13px; font-weight:700; }
-  .fab-cart .r{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--gold-light); }
+  .fab-cart .r{ font-family:'IBM Plex Mono','Cairo',monospace; font-size:13px; color:var(--gold-light); }
 
   .empty{ text-align:center; padding:60px 20px; color:#a49a86; }
   .empty .big{ font-size:32px; margin-bottom:10px; }
@@ -158,7 +163,7 @@
   .qty-ctrl{ display:flex; align-items:center; gap:10px; }
   .qty-btn{ width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--cream2);
     font-size:14px; cursor:pointer; display:flex;align-items:center;justify-content:center; }
-  .qty-val{ font-family:'IBM Plex Mono',monospace; font-size:13px; min-width:14px; text-align:center; }
+  .qty-val{ font-family:'IBM Plex Mono','Cairo',monospace; font-size:13px; min-width:14px; text-align:center; }
 
   .field{ margin-bottom:14px; }
   .field label{ display:block; font-size:12px; font-weight:700; color:var(--charcoal); margin-bottom:6px; }
@@ -170,7 +175,7 @@
 
   .summary-row{ display:flex; justify-content:space-between; font-size:13px; padding:6px 0; color:#5c5647; }
   .summary-row.total{ font-weight:800; color:var(--charcoal); font-size:15px; border-top:1px solid var(--line); margin-top:8px; padding-top:12px; }
-  .summary-row .num{ font-family:'IBM Plex Mono',monospace; }
+  .summary-row .num{ font-family:'IBM Plex Mono','Cairo',monospace; }
 
   .primary-btn{
     width:100%; background:var(--gold); color:#fff; border:none; border-radius:12px; padding:14px;
@@ -186,7 +191,7 @@
     background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px;
   }
   .order-card .top{ display:flex; justify-content:space-between; align-items:flex-start; }
-  .order-id{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:#a49a86; }
+  .order-id{ font-family:'IBM Plex Mono','Cairo',monospace; font-size:11px; color:#a49a86; }
   .status-badge{
     font-size:11px; font-weight:700; padding:5px 10px; border-radius:20px; display:inline-block;
   }
@@ -236,7 +241,7 @@
   .trust-sub{ color:var(--gold-light); font-size:11px; margin-top:2px; line-height:1.5; }
 
   .invoice-line{ display:flex; justify-content:space-between; font-size:12.5px; padding:8px 0; border-bottom:1px dashed var(--line); color:#5c5647; }
-  .invoice-line .num{ font-family:'IBM Plex Mono',monospace; }
+  .invoice-line .num{ font-family:'IBM Plex Mono','Cairo',monospace; }
 
   .pill-tabs{ display:flex; gap:8px; margin-bottom:16px; }
   .pill{ padding:8px 16px; border-radius:20px; font-size:12.5px; font-weight:700; border:1px solid var(--line); cursor:pointer; color:#847c6b; }
@@ -253,7 +258,7 @@
 
   .admin-badge{ background:var(--forest); color:#fff; font-size:10px; font-weight:700; padding:3px 8px; border-radius:8px; }
   .admin-order{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; }
-  .admin-order .meta{ font-size:11.5px; color:#a49a86; margin:4px 0 8px; font-family:'IBM Plex Mono',monospace; }
+  .admin-order .meta{ font-size:11.5px; color:#a49a86; margin:4px 0 8px; font-family:'IBM Plex Mono','Cairo',monospace; }
   .admin-order .items{ font-size:12.5px; color:#5c5647; margin-bottom:10px; line-height:1.7; }
   .status-select{
     width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 10px; font-family:'Cairo',sans-serif;
@@ -283,12 +288,12 @@
   .acct-hd{ display:flex; align-items:center; gap:12px; background:var(--cream2); border-radius:14px; padding:12px 14px; margin:6px 0 4px; }
   .acct-avatar{ width:42px;height:42px;border-radius:50%; background:var(--charcoal); color:var(--gold-light);
     display:flex;align-items:center;justify-content:center; font-size:18px; flex-shrink:0; }
-  .acct-name{ font-weight:700; font-size:14px; color:var(--charcoal); font-family:'IBM Plex Mono',monospace; }
+  .acct-name{ font-weight:700; font-size:14px; color:var(--charcoal); font-family:'IBM Plex Mono','Cairo',monospace; }
   .acct-role{ font-size:11.5px; color:#847c6b; margin-top:2px; }
   .track-card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
   .track-card .top{ display:flex; justify-content:space-between; align-items:center; }
   .track-items{ font-size:12.5px; color:#5c5647; margin:8px 0 2px; line-height:1.6; }
-  .track-date{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:#a49a86; }
+  .track-date{ font-family:'IBM Plex Mono','Cairo',monospace; font-size:11px; color:#a49a86; }
   .mini-tl{ margin-top:12px; }
   .mini-tl .tl-step{ padding-bottom:12px; }
   .mini-tl .tl-step:last-child{ padding-bottom:0; }
@@ -472,29 +477,29 @@ const categories = [
 
 const items = {
   paint: [
-    {name:'دهان بلاستيك عادي', desc:'وجهين + معجون، شامل الخامة — دهانات جوتن و معجون GLC', price:'180 ج.م / م²'},
-    {name:'دهان بلاستيك سوبر لوكس', desc:'تشطيب فاخر مقاوم للاتساخ — Jotun Lux و معجون GLC', price:'200 ج.م / م²'},
-    {name:'ديكور حوائط (استنسل / تكستشر)', desc:'حسب التصميم المطلوب — شامل بانوهات او دهانات ديكورية', price:'220 ج.م / م²'},
-    {name:'دهان بويا / لاكيه للأخشاب', desc:'معجون و دهان لاكيه او دوكو — غير شامل المون المستخدمة', price:'6000 ج.م / الوحدة'},
+    {name:'دهان بلاستيك عادي', desc:'وجهين + معجون، شامل الخامة — دهانات جوتن و معجون GLC', price:'180 ج.م للمتر'},
+    {name:'دهان بلاستيك سوبر لوكس', desc:'تشطيب فاخر مقاوم للاتساخ — Jotun Lux و معجون GLC', price:'200 ج.م للمتر'},
+    {name:'ديكور حوائط (استنسل / تكستشر)', desc:'حسب التصميم المطلوب — شامل بانوهات او دهانات ديكورية', price:'220 ج.م للمتر'},
+    {name:'دهان بويا / لاكيه للأخشاب', desc:'معجون و دهان لاكيه او دوكو — غير شامل المون المستخدمة', price:'6000 ج.م للوحدة'},
   ],
   floor: [
-    {name:'تركيب بورسلين', desc:'مصنعيات شامل الصلايب — حتى مقاس 160×80', price:'160 ج.م / م²'},
-    {name:'باركيه SPC', desc:'مقاوم للماء، تركيب سريع', price:'300 ج.م / م²'},
+    {name:'تركيب بورسلين', desc:'مصنعيات شامل الصلايب — حتى مقاس 160×80', price:'160 ج.م للمتر'},
+    {name:'باركيه SPC', desc:'مقاوم للماء، تركيب سريع', price:'300 ج.م للمتر'},
     {name:'رخام أو جرانيت', desc:'حسب نوع الخامة المختارة', price:'حسب الخامة'},
-    {name:'سيراميك أرضيات', desc:'باستخدام مونة اسمنتية', price:'140 ج.م / م²'},
+    {name:'سيراميك أرضيات', desc:'باستخدام مونة اسمنتية', price:'140 ج.م للمتر'},
   ],
   ceiling: [
-    {name:'سقف جبس بورد فلات', desc:'كناوف المانى و صاج 4 ملى — احمر او اخضر او ابيض', price:'480 ج.م / م²'},
-    {name:'سقف جبس بورد بإضاءة مخفية', desc:'حسب التصميم بيت نور او شادو جاب', price:'420 ج.م / م²'},
+    {name:'سقف جبس بورد فلات', desc:'كناوف المانى و صاج 4 ملى — احمر او اخضر او ابيض', price:'480 ج.م للمتر'},
+    {name:'سقف جبس بورد بإضاءة مخفية', desc:'حسب التصميم بيت نور او شادو جاب', price:'420 ج.م للمتر'},
   ],
   electric: [
     {name:'تأسيس كهرباء كامل', desc:'أسلاك، لوحة توزيع، فيش وأباجورات', price:'حسب المساحة'},
-    {name:'تركيب إضاءة وسبوت لايت', desc:'شامل التوصيل والتجربة', price:'120 ج.م / نقطة'},
+    {name:'تركيب إضاءة وسبوت لايت', desc:'شامل التوصيل والتجربة', price:'120 ج.م للنقطة'},
     {name:'تركيب لوحة توزيع', desc:'حسب اختيار العميل', price:'حسب الخامة'},
   ],
   plumbing: [
-    {name:'تأسيس سباكة كامل', desc:'مواسير مياه وصرف — غير شامل المون', price:'7000 ج.م / القطعة'},
-    {name:'تركيب أدوات صحية', desc:'حوض، كرسي، خلاط', price:'450 ج.م / قطعة'},
+    {name:'تأسيس سباكة كامل', desc:'مواسير مياه وصرف — غير شامل المون', price:'7000 ج.م للقطعة'},
+    {name:'تركيب أدوات صحية', desc:'حوض، كرسي، خلاط', price:'450 ج.م للقطعة'},
     {name:'عزل حمامات ومطابخ', desc:'', price:'حسب الخامة'},
   ],
   doors: [
@@ -503,7 +508,7 @@ const items = {
     {name:'باب دخلة رئيسي', desc:'حسب المقاس والنوع', price:'حسب المقاس'},
   ],
   kitchen: [
-    {name:'مطبخ خشب HPL', desc:'تصميم وتنفيذ حسب المساحة', price:'7000 ج.م / متر طولي'},
+    {name:'مطبخ خشب HPL', desc:'تصميم وتنفيذ حسب المساحة', price:'7000 ج.م للمتر الطولي'},
     {name:'كاونتر جرانيت / كوارتز', desc:'شامل التركيب', price:'حسب الخامة'},
   ],
   bath: [
@@ -639,7 +644,9 @@ function toggleCart(catId, idx){
 
 function updateFab(){
   const fab = document.getElementById('fab-cart');
-  if (cart.length === 0){ fab.style.display = 'none'; return; }
+  const active = document.querySelector('.screen.active')?.id;
+  const onBrowse = active === 'screen-home' || active === 'screen-category';
+  if (cart.length === 0 || !onBrowse){ fab.style.display = 'none'; return; }
   fab.style.display = 'flex';
   document.getElementById('fab-total').textContent = `${cart.length} بند مختار`;
 }
@@ -1114,6 +1121,7 @@ function showScreen(id){
   if (id === 'screen-home') document.querySelector('[data-nav="home"]').classList.add('active');
   if (id === 'screen-profile'){ document.querySelector('[data-nav="profile"]').classList.add('active'); renderProfile(); }
   if (id === 'screen-cart') { renderCart(); }
+  updateFab();   // the floating cart pill only belongs on the home / category screens
 }
 
 function goHome(){ showScreen('screen-home'); }
