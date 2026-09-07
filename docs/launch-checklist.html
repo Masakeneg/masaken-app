@@ -242,7 +242,7 @@
   <header>
     <span class="brandmark"><span class="ar">مساكن</span> Masaken</span>
     <h1>Taking the app live</h1>
-    <p class="lede">Everything from an empty Supabase account to <code>app.masakeneg.com</code> serving real orders. Work top to bottom &mdash; each phase depends on the one before it.</p>
+    <p class="lede">From an empty Supabase account to a live, secured order app. Phases 1&ndash;6 are done and verified; a reachable URL (phase 7) and the live smoke test (phase 8) remain.</p>
     <div class="meta">
       <span>~15 min hands-on</span>
       <span>+ provisioning waits</span>
@@ -257,8 +257,30 @@
     <button id="reset" type="button">reset</button>
   </div>
 
-  <div class="callout" style="margin-bottom:36px;">
-    The <b class="path">●</b> <b>hand-off</b> marker means <b>you</b> do that bit &mdash; a login, a password, an OAuth approval, a DNS change. I can&rsquo;t do those, and shouldn&rsquo;t. Everything else is just clicking where it says.
+  <div class="callout" style="margin-bottom:22px; border-left-color:var(--forest-mark);">
+    <b>Live as of 7 Sep 2026.</b> Claude drove phases 1&ndash;6 in the browser and tested the
+    backend against the real database. This page is now a record of the setup plus the
+    two open items below. The <b class="path">●</b> <b>hand-off</b> marks the steps you did / still do yourself.
+  </div>
+
+  <div class="callout" style="margin-bottom:14px;">
+    <b>Done &amp; verified</b><br>
+    &bull; Supabase project <code>aorxrwwpexsfodnjbzub</code> (Masakeneg org) &mdash; schema, RLS, <code>create_order()</code>, realtime<br>
+    &bull; Public sign-ups turned off; staff login created: <code>mustafaghonim95@gmail.com</code><br>
+    &bull; <code>config.js</code> wired to the live project &amp; committed<br>
+    &bull; Security test passed: public can create an order, cannot read any order data<br>
+    &bull; GitHub <code>Masakeneg/masaken-app</code> (private) &middot; Netlify auto-deploys from <code>master</code><br>
+    &bull; Live build published: <code>master@a40243b</code>
+  </div>
+
+  <div class="callout" style="margin-bottom:36px; border-left-color:var(--flag);">
+    <b>Open items</b><br>
+    &bull; <b>The <code>masaken-app.netlify.app</code> URL is blocked on Egyptian ISPs</b> (Netlify's shared
+    domain &mdash; your older <code>masaken-website.netlify.app</code> is blocked too). The app works;
+    the address doesn&rsquo;t resolve locally. Fix = a custom domain (phase 7) or a redeploy to
+    Cloudflare Pages, whose <code>*.pages.dev</code> is not blocked.<br>
+    &bull; Add more staff logins if others need the admin panel (phase 3).<br>
+    &bull; First real end-to-end test on the live site &mdash; place an order, check it lands, sign into the admin panel (phase 8). Needs a reachable URL first.
   </div>
 
   <!-- ============ PHASE 1 ============ -->
@@ -541,19 +563,26 @@ git push -u origin master</pre>
   <section class="phase" id="p7">
     <div class="rail"><div class="num">7</div><div class="thread"></div></div>
     <div class="body">
-      <h2>Point the domain</h2>
-      <p class="aim">Optional, but it&rsquo;s what clients will type. Skip if you&rsquo;re happy with the <code>.netlify.app</code> address for now.</p>
+      <h2>Point a domain &mdash; needed for Egypt</h2>
+      <p class="aim">Not optional here: the free <code>.netlify.app</code> address is ISP-blocked in Egypt. A custom domain resolves straight to Netlify&rsquo;s IPs and isn&rsquo;t filtered.</p>
 
       <label class="step"><input type="checkbox">
         <span class="txt">
-          <p>In Netlify: <span class="navpath"><b>Domain management</b> &rsaquo; <b>Add a domain</b></span> &rarr; enter <code>app.masakeneg.com</code> &rarr; <em>Verify</em> &rarr; <em>Add domain</em>.</p>
+          <p><span class="flag">hand-off</span></p>
+          <p>Register a domain if you don&rsquo;t have one &mdash; e.g. <code>masakeneg.com</code> at Cloudflare Registrar or Namecheap (~$10/yr). Nothing under <code>masakeneg.*</code> is registered right now.</p>
+        </span>
+      </label>
+
+      <label class="step"><input type="checkbox">
+        <span class="txt">
+          <p>In Netlify (project <b>masaken-app</b>): <span class="navpath"><b>Domain management</b> &rsaquo; <b>Add a domain</b></span> &rarr; enter <code>app.masakeneg.com</code> (or the apex) &rarr; <em>Verify</em> &rarr; <em>Add domain</em>.</p>
         </span>
       </label>
 
       <label class="step"><input type="checkbox">
         <span class="txt">
           <p><span class="flag">hand-off</span></p>
-          <p>Netlify shows a DNS record to add. At whoever hosts <code>masakeneg.com</code> DNS (registrar or host control panel), add a <strong>CNAME</strong>: name <code>app</code>, value the <code>&hellip;.netlify.app</code> target Netlify names. Save.</p>
+          <p>Netlify shows a DNS record to add. At your registrar&rsquo;s DNS, add a <strong>CNAME</strong>: name <code>app</code>, value the <code>&hellip;.netlify.app</code> target Netlify names. Save.</p>
         </span>
       </label>
 
