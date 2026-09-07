@@ -273,14 +273,22 @@
     &bull; Live build published: <code>master@a40243b</code>
   </div>
 
+  <div class="callout" style="margin-bottom:14px; border-left-color:var(--forest-mark);">
+    <b>Working URL for Egypt: <code>https://masakeneg.github.io/masaken-app/</code></b><br>
+    GitHub Pages is not filtered the way <code>netlify.app</code> is. Verified loading in Cairo,
+    and a live order went through to the database. Auto-deploys on every push to
+    <code>master</code>, same as Netlify. Netlify stays live too for anyone outside Egypt.
+  </div>
+
   <div class="callout" style="margin-bottom:36px; border-left-color:var(--flag);">
     <b>Open items</b><br>
-    &bull; <b>The <code>masaken-app.netlify.app</code> URL is blocked on Egyptian ISPs</b> (Netlify's shared
-    domain &mdash; your older <code>masaken-website.netlify.app</code> is blocked too). The app works;
-    the address doesn&rsquo;t resolve locally. Fix = a custom domain (phase 7) or a redeploy to
-    Cloudflare Pages, whose <code>*.pages.dev</code> is not blocked.<br>
+    &bull; <b>Smoke test on your phone:</b> open the github.io URL, place an order, tap the logo
+    5&times;, sign in, confirm the order shows and status changes stick.<br>
+    &bull; One test order (<b>#2</b>, address &ldquo;fifth&rdquo;) is in the database &mdash; delete it from
+    the admin panel or Supabase Table Editor once you&rsquo;ve checked it appears. Real orders start at #3.<br>
     &bull; Add more staff logins if others need the admin panel (phase 3).<br>
-    &bull; First real end-to-end test on the live site &mdash; place an order, check it lands, sign into the admin panel (phase 8). Needs a reachable URL first.
+    &bull; A custom domain (phase 7) is still the tidiest long-term answer &mdash; one branded
+    URL, and it un-blocks the Netlify copy too.
   </div>
 
   <!-- ============ PHASE 1 ============ -->
