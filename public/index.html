@@ -865,7 +865,6 @@ async function adminLogin(){
 async function adminLogout(){
   if (rtChannel){ sb.removeChannel(rtChannel); rtChannel = null; }
   if (sb){ await sb.auth.signOut(); }
-  try{ localStorage.removeItem('masaken-entered'); }catch(e){}
   showWelcome();
 }
 
@@ -919,8 +918,7 @@ function renderWelcomeMenu(){
   `;
 }
 function welcomeGuest(){
-  try{ localStorage.setItem('masaken-entered', 'guest'); }catch(e){}
-  enterApp();
+  enterApp();   // guest choice is per page-load — a refresh shows the gate again
 }
 function welcomeAuth(mode){
   authMode = mode;
@@ -1011,7 +1009,6 @@ async function custSubmit(){
       return;
     }
     myPhone = canonPhone(phoneRaw);
-    try{ localStorage.setItem('masaken-entered', 'account'); }catch(e){}
     if (authContainer === 'welcome-body'){ enterApp(); }
     else { renderProfile(); }
   } finally {
@@ -1022,7 +1019,6 @@ async function custSubmit(){
 async function custLogout(){
   if (myOrdersChannel){ sb.removeChannel(myOrdersChannel); myOrdersChannel = null; }
   await sb.auth.signOut();
-  try{ localStorage.removeItem('masaken-entered'); }catch(e){}
   showWelcome();
 }
 
@@ -1141,16 +1137,13 @@ async function boot(){
 
   await clearDeadSession();
   const session = await currentSession();
-  if (session){                                 // already signed in → straight in
+  if (session){                                 // signed in → straight in, session persists
     const p = phoneFromEmail(session.user.email);
     if (/^0\d{9,}$/.test(p)) myPhone = p;
     enterApp();
     return;
   }
-  let entered = null;
-  try{ entered = localStorage.getItem('masaken-entered'); }catch(e){}
-  if (entered){ enterApp(); return; }           // already chose "guest" before
-  showWelcome();                                // first visit → show the gate
+  showWelcome();                                // not signed in → show the gate every load
 }
 boot();
 
