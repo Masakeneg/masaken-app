@@ -26,10 +26,14 @@ category, build a request, and submit it. On submit the app:
 2. saves the order to a **Supabase** database,
 3. sends an **email** notification (EmailJS).
 
-**Customers** can optionally make an account (**حسابي** tab — phone + password,
-no email needed) to watch their order move through the pipeline in real time.
-Ordering without an account still works; signing up later links past orders by
-phone number.
+**First visit** shows a welcome screen: *create account · sign in · continue as
+guest*. The app opens after the visitor picks one (guest included). The choice is
+remembered, so it doesn't reappear on later visits; signing out returns to it.
+
+**Customers** can make an account (phone + password, no email needed) to watch
+their order move through the pipeline in real time — from the welcome screen or
+the **حسابي** tab later. Ordering as a guest still works; signing up links past
+guest orders by phone number.
 
 Masaken staff open a hidden **admin panel** (tap the "Masaken" logo 5×, then sign
 in with a staff email) to see **all** orders and move them through the pipeline
