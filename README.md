@@ -26,9 +26,10 @@ category, build a request, and submit it. On submit the app:
 2. saves the order to a **Supabase** database,
 3. sends an **email** notification (EmailJS).
 
-**First visit** shows a welcome screen: *create account · sign in · continue as
-guest*. The app opens after the visitor picks one (guest included). The choice is
-remembered, so it doesn't reappear on later visits; signing out returns to it.
+**Every visit** opens on a welcome screen: *create account · sign in · continue
+as guest*. The app opens only after the visitor picks one (guest included). A
+signed-in session persists across refreshes and skips the screen; a guest sees it
+again on every reload.
 
 **Customers** can make an account (phone + password, no email needed) to watch
 their order move through the pipeline in real time — from the welcome screen or
