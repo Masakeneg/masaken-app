@@ -260,6 +260,9 @@
   .admin-order{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; }
   .admin-order .meta{ font-size:11.5px; color:#a49a86; margin:4px 0 8px; font-family:'IBM Plex Mono','Cairo',monospace; }
   .admin-order .items{ font-size:12.5px; color:#5c5647; margin-bottom:10px; line-height:1.7; }
+  .admin-note{ font-size:12.5px; line-height:1.7; color:var(--charcoal); background:#F4E8D3; border:1px solid var(--line);
+    border-radius:10px; padding:8px 11px; margin-bottom:10px; }
+  .admin-note b{ color:var(--gold); }
   .status-select{
     width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 10px; font-family:'Cairo',sans-serif;
     font-size:12.5px; background:var(--cream); color:var(--charcoal); font-weight:700;
@@ -288,7 +291,8 @@
   .acct-hd{ display:flex; align-items:center; gap:12px; background:var(--cream2); border-radius:14px; padding:12px 14px; margin:6px 0 4px; }
   .acct-avatar{ width:42px;height:42px;border-radius:50%; background:var(--charcoal); color:var(--gold-light);
     display:flex;align-items:center;justify-content:center; font-size:18px; flex-shrink:0; }
-  .acct-name{ font-weight:700; font-size:14px; color:var(--charcoal); font-family:'IBM Plex Mono','Cairo',monospace; }
+  .acct-name{ font-weight:700; font-size:14px; color:var(--charcoal); font-family:'IBM Plex Mono','Cairo',monospace;
+    direction:ltr; text-align:right; unicode-bidi:isolate; }
   .acct-role{ font-size:11.5px; color:#847c6b; margin-top:2px; }
   .track-card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
   .track-card .top{ display:flex; justify-content:space-between; align-items:center; }
@@ -438,8 +442,8 @@
     <!-- ADMIN -->
     <div class="screen" id="screen-admin">
       <div class="topbar">
-        <div class="back-btn" onclick="goHome()">→</div>
-        <h2 style="font-size:16px;">لوحة تحكم مساكن <span class="sync-dot" id="rt-dot"></span></h2>
+        <div class="back-btn" onclick="showScreen('screen-profile')">→</div>
+        <h2 style="font-size:16px;">طلبات العملاء <span class="sync-dot" id="rt-dot"></span></h2>
         <div class="back-btn" onclick="adminLogout()" title="خروج">⏻</div>
       </div>
       <div id="admin-list"></div>
@@ -941,12 +945,32 @@ async function renderProfile(){
   if (!session){ authContainer = 'profile-body'; renderAuthForm(); return; }
 
   const isAdmin = await currentIsAdmin();
+
+  if (isAdmin){
+    let count = 0;
+    try{ const r = await sb.from('orders').select('id', { count: 'exact', head: true }); count = r.count || 0; }catch(e){}
+    body.innerHTML = `
+      <div class="acct-hd">
+        <div class="acct-avatar">🛠️</div>
+        <div>
+          <div class="acct-name">${session.user.email}</div>
+          <div class="acct-role">فريق مساكن</div>
+        </div>
+      </div>
+      <div class="section-title">إدارة الطلبات</div>
+      <div class="note-box">تقدر تشوف كل طلبات العملاء، البنود، العنوان، رقم الموبايل، <b>وملاحظات العميل</b>، وتغيّر حالة كل طلب.</div>
+      <button class="primary-btn" onclick="openAdmin()">فتح لوحة الطلبات${count ? ' (' + count + ')' : ''}</button>
+      <button class="ghost-btn" onclick="custLogout()">تسجيل الخروج</button>
+    `;
+    return;
+  }
+
   body.innerHTML = `
     <div class="acct-hd">
       <div class="acct-avatar">👤</div>
       <div>
         <div class="acct-name">${phoneFromEmail(session.user.email)}</div>
-        <div class="acct-role">${isAdmin ? 'فريق مساكن' : 'عميل مساكن'}</div>
+        <div class="acct-role">عميل مساكن</div>
       </div>
     </div>
     <div class="section-title">طلباتي</div>
@@ -968,8 +992,8 @@ function renderAuthForm(){
       <div class="pill ${authMode === 'signup' ? 'active' : ''}" onclick="setAuthMode('signup')">حساب جديد</div>
     </div>
     <div class="field">
-      <label>رقم الموبايل</label>
-      <input type="tel" id="cust-phone" inputmode="numeric" autocomplete="tel" placeholder="01xxxxxxxxx" value="${myPhone || ''}">
+      <label>${authMode === 'signup' ? 'رقم الموبايل' : 'رقم الموبايل أو الإيميل'}</label>
+      <input type="${authMode === 'signup' ? 'tel' : 'text'}" id="cust-phone" inputmode="${authMode === 'signup' ? 'numeric' : 'text'}" autocomplete="username" placeholder="${authMode === 'signup' ? '01xxxxxxxxx' : '01xxxxxxxxx أو الإيميل'}" value="${myPhone || ''}">
     </div>
     <div class="field">
       <label>كلمة المرور</label>
@@ -983,18 +1007,24 @@ function renderAuthForm(){
   `;
 }
 
+// A login identifier is either an email (فريق مساكن) or an Egyptian phone (عميل).
+function isEmailId(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim()); }
+
 async function custSubmit(){
   const err = document.getElementById('cust-err');
   err.style.display = 'none';
-  const phoneRaw = document.getElementById('cust-phone').value;
+  const idRaw = document.getElementById('cust-phone').value.trim();
   const pass = document.getElementById('cust-pass').value;
-  if (phoneDigits(phoneRaw).length < 10){
-    err.textContent = 'رقم موبايل غير صحيح'; err.style.display = 'block'; return;
+  const asEmail = authMode === 'login' && isEmailId(idRaw);   // فريق مساكن sign in with their email
+
+  if (!asEmail && phoneDigits(idRaw).length < 10){
+    err.textContent = authMode === 'signup' ? 'رقم موبايل غير صحيح' : 'اكتب رقم موبايل صحيح أو إيميل';
+    err.style.display = 'block'; return;
   }
   if (pass.length < 6){
     err.textContent = 'كلمة المرور لازم 6 حروف على الأقل'; err.style.display = 'block'; return;
   }
-  const email = phoneToEmail(phoneRaw);
+  const email = asEmail ? idRaw.toLowerCase() : phoneToEmail(idRaw);
   const btn = document.getElementById(authContainer).querySelector('.primary-btn');
   const orig = btn.textContent; btn.textContent = 'لحظة...'; btn.disabled = true;
   try{
@@ -1002,7 +1032,7 @@ async function custSubmit(){
     if (authMode === 'signup'){
       res = await sb.auth.signUp({ email, password: pass });
       if (!res.error){
-        try{ await sb.rpc('link_my_orders', { p_phone: canonPhone(phoneRaw) }); }catch(e){ console.warn('link_my_orders', e); }
+        try{ await sb.rpc('link_my_orders', { p_phone: canonPhone(idRaw) }); }catch(e){ console.warn('link_my_orders', e); }
       }
     } else {
       res = await sb.auth.signInWithPassword({ email, password: pass });
@@ -1011,11 +1041,11 @@ async function custSubmit(){
       const m = (res.error.message || '').toLowerCase();
       err.textContent = authMode === 'signup'
         ? (m.includes('already') || m.includes('registered') ? 'الرقم ده مسجّل قبل كده — اضغط "دخول"' : 'تعذّر إنشاء الحساب، جرّب تاني')
-        : 'رقم الموبايل أو كلمة المرور غير صحيحة';
+        : 'البيانات غير صحيحة';
       err.style.display = 'block';
       return;
     }
-    myPhone = canonPhone(phoneRaw);
+    if (!asEmail) myPhone = canonPhone(idRaw);
     if (authContainer === 'welcome-body'){ enterApp(); }
     else { renderProfile(); }
   } finally {
@@ -1088,7 +1118,7 @@ async function openAdmin(){
           <span class="status-badge ${statusMeta[o.status].cls}">${statusMeta[o.status].label}</span>
         </div>
         <div class="items">${o.items.map(it => `${it.name} × ${it.qty} (${it.price})`).join('<br>')}</div>
-        ${o.notes ? `<div class="items">ملاحظات: ${o.notes}</div>` : ''}
+        ${o.notes ? `<div class="admin-note"><b>ملاحظات العميل:</b> ${o.notes}</div>` : ''}
         <select class="status-select" onchange="updateOrderStatus('${o.id}', this.value)">
           ${statusSteps.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${statusMeta[s].label}</option>`).join('')}
         </select>
