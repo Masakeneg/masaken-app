@@ -267,6 +267,18 @@
     text-decoration:none;
   }
 
+  /* Welcome gate */
+  #screen-welcome{ padding:28px 24px; display:flex; flex-direction:column; justify-content:center; }
+  .welcome-wrap{ width:100%; display:flex; flex-direction:column; align-items:flex-start; margin:auto 0; }
+  .welcome-brand{ font-family:'IBM Plex Sans Arabic',sans-serif; font-weight:700; font-size:30px; color:var(--charcoal); letter-spacing:.2px; }
+  .welcome-brand span{ color:var(--gold); }
+  .welcome-tag{ color:#6b6455; font-size:14px; margin-top:6px; }
+  .welcome-menu{ width:100%; display:flex; flex-direction:column; gap:12px; }
+  .welcome-menu .primary-btn, .welcome-menu .ghost-btn{ margin-top:0; }
+  .welcome-sub{ font-size:12px; color:#a49a86; text-align:center; margin-top:4px; }
+  .back-link{ background:none; border:none; color:var(--gold); font-family:'Cairo',sans-serif; font-size:13px; font-weight:700; cursor:pointer; padding:6px 0; margin-bottom:6px; }
+  body.gated .bottom-nav, body.gated .fab-cart{ display:none !important; }
+
   /* حسابي — customer account + order tracking */
   .acct-hd{ display:flex; align-items:center; gap:12px; background:var(--cream2); border-radius:14px; padding:12px 14px; margin:6px 0 4px; }
   .acct-avatar{ width:42px;height:42px;border-radius:50%; background:var(--charcoal); color:var(--gold-light);
@@ -294,6 +306,18 @@
   </div>
 
   <div class="screens">
+
+    <!-- WELCOME / gate — sign up, sign in, or continue as guest -->
+    <div class="screen" id="screen-welcome">
+      <div class="welcome-wrap">
+        <div class="welcome-brand">Masaken <span>مساكن</span></div>
+        <div class="welcome-tag">تشطيبك يبدأ من هنا</div>
+        <svg class="dim-line" viewBox="0 0 340 16" preserveAspectRatio="none" style="max-width:220px;margin:14px 0 24px;">
+          <path d="M6 8 H334 M6 2 V14 M334 2 V14"/>
+        </svg>
+        <div id="welcome-body"></div>
+      </div>
+    </div>
 
     <!-- HOME -->
     <div class="screen active" id="screen-home">
@@ -841,7 +865,8 @@ async function adminLogin(){
 async function adminLogout(){
   if (rtChannel){ sb.removeChannel(rtChannel); rtChannel = null; }
   if (sb){ await sb.auth.signOut(); }
-  goHome();
+  try{ localStorage.removeItem('masaken-entered'); }catch(e){}
+  showWelcome();
 }
 
 // ---------- حسابي — CUSTOMER ACCOUNTS + ORDER TRACKING ----------
@@ -863,9 +888,44 @@ function phoneFromEmail(email){
   return /^\d{10,}$/.test(local) ? ('0' + local.slice(-10)) : local;
 }
 
+let authContainer = 'profile-body';   // 'profile-body' (in-app) | 'welcome-body' (gate)
+
 function setAuthMode(m){
   authMode = m;
-  renderAuthForm(document.getElementById('profile-body'));
+  renderAuthForm();
+}
+
+// ----- Welcome gate -----
+function showWelcome(){
+  document.body.classList.add('gated');
+  renderWelcomeMenu();
+  showScreen('screen-welcome');
+}
+function enterApp(){
+  document.body.classList.remove('gated');
+  const wb = document.getElementById('welcome-body');
+  if (wb) wb.innerHTML = '';
+  showScreen('screen-home');
+}
+function renderWelcomeMenu(){
+  authContainer = 'welcome-body';
+  document.getElementById('welcome-body').innerHTML = `
+    <div class="welcome-menu">
+      <button class="primary-btn" onclick="welcomeAuth('signup')">إنشاء حساب جديد</button>
+      <button class="ghost-btn" onclick="welcomeAuth('login')">عندي حساب — تسجيل الدخول</button>
+      <button class="ghost-btn" onclick="welcomeGuest()">الدخول كضيف</button>
+      <div class="welcome-sub">الحساب بيخليك تتابع حالة طلباتك. الدخول كضيف بيوديك على الطلب على طول.</div>
+    </div>
+  `;
+}
+function welcomeGuest(){
+  try{ localStorage.setItem('masaken-entered', 'guest'); }catch(e){}
+  enterApp();
+}
+function welcomeAuth(mode){
+  authMode = mode;
+  authContainer = 'welcome-body';
+  renderAuthForm();
 }
 
 async function renderProfile(){
@@ -873,7 +933,7 @@ async function renderProfile(){
   if (!body) return;
   if (!sb){ body.innerHTML = `<div class="note-box">الحسابات مش متاحة دلوقتي.</div>`; return; }
   const session = await currentSession();
-  if (!session){ renderAuthForm(body); return; }
+  if (!session){ authContainer = 'profile-body'; renderAuthForm(); return; }
 
   const isAdmin = await currentIsAdmin();
   body.innerHTML = `
@@ -892,9 +952,13 @@ async function renderProfile(){
   subscribeMyOrders();
 }
 
-function renderAuthForm(body){
-  body.innerHTML = `
-    <div class="pill-tabs" style="margin-top:8px;">
+function renderAuthForm(){
+  const onGate = authContainer === 'welcome-body';
+  const box = document.getElementById(authContainer);
+  if (!box) return;
+  box.innerHTML = `
+    ${onGate ? `<button class="back-link" onclick="renderWelcomeMenu()">→ رجوع</button>` : ''}
+    <div class="pill-tabs" style="margin-top:${onGate ? '0' : '8px'};">
       <div class="pill ${authMode === 'login' ? 'active' : ''}" onclick="setAuthMode('login')">دخول</div>
       <div class="pill ${authMode === 'signup' ? 'active' : ''}" onclick="setAuthMode('signup')">حساب جديد</div>
     </div>
@@ -908,8 +972,9 @@ function renderAuthForm(body){
     </div>
     <button class="primary-btn" onclick="custSubmit()">${authMode === 'signup' ? 'إنشاء حساب' : 'دخول'}</button>
     <div id="cust-err" class="note-box" style="display:none; color:var(--danger);"></div>
-    <div class="note-box">الحساب اختياري — بيخليك تتابع حالة طلباتك. تقدر تطلب من غير حساب.</div>
-    <button class="ghost-btn" onclick="goHome()">تصفّح المنتجات كضيف</button>
+    ${onGate
+      ? `<button class="ghost-btn" onclick="welcomeGuest()">تخطّي — الدخول كضيف</button>`
+      : `<div class="note-box">الحساب اختياري — بيخليك تتابع حالة طلباتك.</div>`}
   `;
 }
 
@@ -925,7 +990,7 @@ async function custSubmit(){
     err.textContent = 'كلمة المرور لازم 6 حروف على الأقل'; err.style.display = 'block'; return;
   }
   const email = phoneToEmail(phoneRaw);
-  const btn = document.querySelector('#profile-body .primary-btn');
+  const btn = document.getElementById(authContainer).querySelector('.primary-btn');
   const orig = btn.textContent; btn.textContent = 'لحظة...'; btn.disabled = true;
   try{
     let res;
@@ -946,7 +1011,9 @@ async function custSubmit(){
       return;
     }
     myPhone = canonPhone(phoneRaw);
-    renderProfile();
+    try{ localStorage.setItem('masaken-entered', 'account'); }catch(e){}
+    if (authContainer === 'welcome-body'){ enterApp(); }
+    else { renderProfile(); }
   } finally {
     btn.textContent = orig; btn.disabled = false;
   }
@@ -955,7 +1022,8 @@ async function custSubmit(){
 async function custLogout(){
   if (myOrdersChannel){ sb.removeChannel(myOrdersChannel); myOrdersChannel = null; }
   await sb.auth.signOut();
-  renderProfile();
+  try{ localStorage.removeItem('masaken-entered'); }catch(e){}
+  showWelcome();
 }
 
 async function loadMyOrdersInto(el){
@@ -1056,8 +1124,9 @@ function goHome(){ showScreen('screen-home'); }
 
 renderHome();
 
-// Keep sessions alive across reloads; drop live channels on sign-out.
-if (sb){
+// ---------- BOOT: gate on the welcome screen until the visitor picks ----------
+async function boot(){
+  if (!sb){ enterApp(); return; }              // no backend → just let them browse
   sb.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT'){
       if (rtChannel){ sb.removeChannel(rtChannel); rtChannel = null; }
@@ -1069,16 +1138,21 @@ if (sb){
     }
     if (document.getElementById('screen-profile').classList.contains('active')) renderProfile();
   });
-  // On first load: throw away any dead token (deleted account / stale JWT) so it
-  // never blocks signing in or ordering — then pick up a valid session's phone.
-  clearDeadSession().then(currentSession).then((s) => {
-    if (s){
-      const p = phoneFromEmail(s.user.email);
-      if (/^0\d{9,}$/.test(p)) myPhone = p;
-    }
-    if (document.getElementById('screen-profile').classList.contains('active')) renderProfile();
-  });
+
+  await clearDeadSession();
+  const session = await currentSession();
+  if (session){                                 // already signed in → straight in
+    const p = phoneFromEmail(session.user.email);
+    if (/^0\d{9,}$/.test(p)) myPhone = p;
+    enterApp();
+    return;
+  }
+  let entered = null;
+  try{ entered = localStorage.getItem('masaken-entered'); }catch(e){}
+  if (entered){ enterApp(); return; }           // already chose "guest" before
+  showWelcome();                                // first visit → show the gate
 }
+boot();
 
 // PWA: makes the app installable to the home screen.
 if ('serviceWorker' in navigator){
