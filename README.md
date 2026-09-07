@@ -2,13 +2,20 @@
 
 ## Live URLs
 
-| URL | Host | Notes |
-|-----|------|-------|
-| **https://masakeneg.github.io/masaken-app/** | GitHub Pages | **Use this one.** Reachable in Egypt. Auto-deploys on push to `master`. |
-| https://masaken-app.netlify.app/ | Netlify | Works outside Egypt; `netlify.app` is ISP-filtered inside Egypt. Also auto-deploys. |
+All three serve the same code and auto-deploy on every push to `master`.
 
-Both serve the same code from this repo. Repo: `github.com/Masakeneg/masaken-app`.
+| URL | Host | Reachable in Egypt |
+|-----|------|:---:|
+| **https://masakeneg.github.io/masaken-app/** | GitHub Pages | ✅ |
+| **https://masaken-app.cmd2sn9mct.workers.dev/** | Cloudflare | ✅ |
+| https://masaken-app.netlify.app/ | Netlify | ❌ (`netlify.app` is ISP-filtered; works elsewhere) |
+
+Give customers the **GitHub Pages** URL. Repo: `github.com/Masakeneg/masaken-app`.
 Backend: Supabase project `aorxrwwpexsfodnjbzub` (Masakeneg org).
+
+A custom domain (e.g. `app.masakeneg.com`) would replace all of these with one
+branded URL and also un-block the Netlify copy — see `docs/launch-checklist.html`
+phase 7.
 
 ---
 
