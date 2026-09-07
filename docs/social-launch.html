@@ -1,0 +1,449 @@
+<title>Masaken Social Launch</title>
+<meta name="description" content="Instagram &amp; Facebook launch kit for the Masaken finishing app — concepts, scripts, and ready-to-paste Arabic captions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#FAF6EC;
+    --raised:#FFFFFF;
+    --sunk:#F1E9D6;
+    --ink:#1C1C1A;
+    --ink-soft:#5C5647;
+    --ink-faint:#8B8168;
+    --line:#DED3BC;
+    --line-strong:#C9BB9A;
+    --brass:#A97B35;
+    --brass-bright:#C9A05C;
+    --forest:#0C291F;
+    --forest-mark:#2F6B4F;
+    --wa:#1EA362;
+    --shadow:0 1px 2px rgba(28,28,26,.06), 0 10px 26px rgba(28,28,26,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141311; --raised:#1E1C18; --sunk:#100F0D;
+      --ink:#EFE6D4; --ink-soft:#B7AD95; --ink-faint:#877E66;
+      --line:#332F27; --line-strong:#463F32;
+      --brass:#C9A05C; --brass-bright:#E0BE86;
+      --forest:#1C3A2D; --forest-mark:#5FB08A; --wa:#3FCC8A;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141311; --raised:#1E1C18; --sunk:#100F0D;
+    --ink:#EFE6D4; --ink-soft:#B7AD95; --ink-faint:#877E66;
+    --line:#332F27; --line-strong:#463F32;
+    --brass:#C9A05C; --brass-bright:#E0BE86;
+    --forest:#1C3A2D; --forest-mark:#5FB08A; --wa:#3FCC8A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;} }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Cairo', system-ui, -apple-system, sans-serif;
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:840px; margin:0 auto; padding:0 22px 120px; }
+
+  header{ padding:52px 0 8px; }
+  .kicker{ font-family:'IBM Plex Mono', monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); }
+  h1{
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700;
+    font-size:2.5rem; line-height:1.12; letter-spacing:-.015em; margin:12px 0 14px; text-wrap:balance;
+  }
+  .lede{ font-size:1.08rem; color:var(--ink-soft); max-width:62ch; margin:0; }
+
+  h2{
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700;
+    font-size:1.5rem; margin:52px 0 6px; letter-spacing:-.01em; scroll-margin-top:20px;
+  }
+  h2 .en{ color:var(--ink-faint); font-weight:600; font-size:.95rem; font-family:'IBM Plex Mono', monospace; display:block; letter-spacing:.04em; margin-bottom:2px; }
+  h3{ font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:1.06rem; margin:22px 0 6px; }
+  p{ margin:0 0 10px; }
+  ul, ol{ margin:6px 0 12px; padding-inline-start:22px; }
+  li{ margin:5px 0; }
+  strong{ font-weight:700; }
+  a{ color:var(--brass); text-underline-offset:2px; }
+  hr{ border:none; border-top:1px solid var(--line); margin:44px 0; }
+
+  .toc{
+    margin:26px 0 8px; padding:16px 18px; background:var(--sunk); border:1px solid var(--line); border-radius:12px;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:6px 18px;
+  }
+  .toc a{ font-size:.9rem; color:var(--ink-soft); text-decoration:none; }
+  .toc a:hover{ color:var(--brass); }
+  .toc .num{ font-family:'IBM Plex Mono', monospace; color:var(--brass); font-size:.8rem; }
+
+  /* content unit */
+  .unit{ margin:22px 0; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--raised); box-shadow:var(--shadow); }
+  .unit-hd{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:13px 16px; border-bottom:1px solid var(--line); background:var(--sunk); }
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:.68rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    padding:3px 9px; border-radius:999px; color:var(--raised); background:var(--brass);
+  }
+  .tag.reel{ background:var(--forest-mark); }
+  .tag.carousel{ background:var(--brass); }
+  .tag.story{ background:var(--brass-bright); color:var(--ink); }
+  .tag.ad{ background:var(--forest); color:#EFE6D4; }
+  .tag.post{ background:var(--line-strong); color:var(--ink); }
+  .unit-hd .title{ font-family:'IBM Plex Sans Arabic',sans-serif; font-weight:700; font-size:1rem; }
+  .unit-hd .meta{ margin-inline-start:auto; font-family:'IBM Plex Mono', monospace; font-size:.74rem; color:var(--ink-faint); }
+  .unit-body{ padding:16px; }
+  .unit-body > p:first-child{ margin-top:0; }
+
+  /* scene table */
+  .scenes{ width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:.9rem; }
+  .scenes th{ text-align:start; font-family:'IBM Plex Mono', monospace; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); padding:6px 10px 6px 0; border-bottom:1px solid var(--line); }
+  .scenes td{ padding:9px 10px 9px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  .scenes td:first-child{ font-family:'IBM Plex Mono', monospace; color:var(--brass); white-space:nowrap; font-size:.8rem; }
+  .scenes .ost{ display:block; margin-top:3px; color:var(--ink-faint); font-size:.82rem; }
+  .scenes .ost b{ color:var(--ink-soft); font-weight:600; }
+  .wide{ overflow-x:auto; }
+
+  /* copy block (RTL Arabic, ready to paste) */
+  .copyblock{ margin:12px 0 2px; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--sunk); }
+  .copyblock .cb-hd{ display:flex; align-items:center; justify-content:space-between; padding:6px 8px 6px 12px; border-bottom:1px solid var(--line); }
+  .copyblock .cb-label{ font-family:'IBM Plex Mono', monospace; font-size:.7rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+  .copy{ font-family:'IBM Plex Mono', monospace; font-size:.7rem; cursor:pointer; background:var(--raised); color:var(--ink-soft); border:1px solid var(--line-strong); border-radius:5px; padding:4px 9px; }
+  .copy:hover{ color:var(--brass); border-color:var(--brass); }
+  .copy.ok{ color:var(--forest-mark); border-color:var(--forest-mark); }
+  .copyblock pre{
+    margin:0; padding:13px 15px; white-space:pre-wrap; word-break:break-word;
+    font-family:'Cairo', sans-serif; font-size:.92rem; line-height:1.85; color:var(--ink); direction:rtl; text-align:right;
+  }
+  .copyblock pre.ltr{ direction:ltr; text-align:left; font-family:'IBM Plex Mono', monospace; font-size:.82rem; line-height:1.7; }
+
+  .hashbank{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; direction:rtl; }
+  .hashbank span{ font-family:'Cairo', sans-serif; font-size:.82rem; background:var(--sunk); border:1px solid var(--line); border-radius:6px; padding:3px 9px; color:var(--ink-soft); }
+
+  .callout{ margin:14px 0; padding:12px 14px; border-radius:10px; background:var(--sunk); border:1px solid var(--line); border-inline-start:3px solid var(--brass); font-size:.92rem; color:var(--ink-soft); }
+  .callout b{ color:var(--ink); }
+
+  /* week grid */
+  .week{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:10px; margin:14px 0; }
+  .day{ border:1px solid var(--line); border-radius:12px; padding:12px 13px; background:var(--raised); }
+  .day .d{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--brass); text-transform:uppercase; letter-spacing:.06em; }
+  .day .w{ font-family:'IBM Plex Sans Arabic',sans-serif; font-weight:700; font-size:.95rem; margin:3px 0 4px; }
+  .day p{ font-size:.85rem; color:var(--ink-soft); margin:0; }
+
+  .check li{ list-style:none; position:relative; padding-inline-start:26px; }
+  .check{ padding-inline-start:0; }
+  .check li::before{ content:"☐"; position:absolute; inset-inline-start:0; color:var(--brass); font-size:1.05em; }
+
+  footer{ margin-top:56px; padding-top:22px; border-top:1px solid var(--line); color:var(--ink-faint); font-size:.9rem; }
+
+  @media (max-width:560px){
+    h1{ font-size:2rem; }
+    .wrap{ padding:0 16px 100px; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">Masaken · Instagram + Facebook</div>
+    <h1>Launch content kit</h1>
+    <p class="lede">Concepts, shot-by-shot scripts, and Arabic captions ready to paste. Built around the three things that actually set Masaken apart: <strong>prices shown upfront</strong>, <strong>an engineer supervising every step</strong>, and <strong>pay on delivery</strong>.</p>
+  </header>
+
+  <div class="toc">
+    <a href="#pos"><span class="num">01</span> Positioning &amp; audience</a>
+    <a href="#carousel"><span class="num">02</span> Launch carousel</a>
+    <a href="#reel1"><span class="num">03</span> Reel — the problem</a>
+    <a href="#reel2"><span class="num">04</span> Reel — app walkthrough</a>
+    <a href="#posts"><span class="num">05</span> Single-image posts</a>
+    <a href="#story"><span class="num">06</span> Story sequence</a>
+    <a href="#ads"><span class="num">07</span> Paid ad copy</a>
+    <a href="#hashtags"><span class="num">08</span> Hashtag bank</a>
+    <a href="#week"><span class="num">09</span> Week-1 plan</a>
+    <a href="#assets"><span class="num">10</span> What to prepare</a>
+  </div>
+
+  <!-- ============ 01 ============ -->
+  <h2 id="pos"><span class="en">01 / positioning</span>الرسالة الأساسية</h2>
+  <p>سطر واحد يتقال في كل بوست، وكل إعلان، وأول ما حد يسأل «التطبيق ده بيعمل إيه»:</p>
+  <div class="copyblock">
+    <div class="cb-hd"><span class="cb-label">one-liner</span><button class="copy" data-t="pos1">نسخ</button></div>
+    <pre id="pos1">مساكن — تشطيب شقتك بسعر واضح من الأول، وإشراف مهندس مدني على كل بند، والدفع عند الاستلام. كله من موبايلك.</pre>
+  </div>
+
+  <h3>الجمهور المستهدف</h3>
+  <ul>
+    <li><strong>عرسان</strong> بيجهّزوا شقة الجواز</li>
+    <li>ناس <strong>اشترت في كمبوند أو مدينة جديدة</strong> — التجمّع، الشيخ زايد، أكتوبر، العاصمة الإدارية، مدينتي، المستقبل</li>
+    <li><strong>ملّاك</strong> عايزين يشطّبوا شقة بسرعة عشان يأجّروها</li>
+    <li>السن: 25–40 · المرحلة الأولى: القاهرة والجيزة</li>
+  </ul>
+  <div class="callout">
+    <b>وجع الدماغ اللي بتحله:</b> المقاول اللي بيختفي أو يرمي الشغل · الحسابات اللي بتزيد فجأة · إنك مش عارف السعر الصح · الخوف من النصب. خلّي ده هو موضوع أول أسبوع محتوى.
+  </div>
+
+  <!-- ============ 02 ============ -->
+  <h2 id="carousel"><span class="en">02 / launch post</span>كاروسيل الإطلاق</h2>
+  <div class="unit">
+    <div class="unit-hd"><span class="tag carousel">Carousel</span><span class="title">«تشطيب من غير وجع دماغ» — 6 سلايدات</span><span class="meta">1080×1350</span></div>
+    <div class="unit-body">
+      <p>خلفية شاركول، خط برَص (اللون الدهبي)، وصورة/سكرين من التطبيق في آخر سلايد. كل سلايد جملة واحدة كبيرة.</p>
+      <div class="wide"><table class="scenes">
+        <tr><th>سلايد</th><th>النص على الصورة</th></tr>
+        <tr><td>1 — الغلاف</td><td>تشطيب شقتك… من غير وجع دماغ <span class="ost"><b>تحت:</b> شعار مساكن + «افتح للتفاصيل ←»</span></td></tr>
+        <tr><td>2</td><td>بتدوّر على مقاول وخايف: السعر يزيد؟ الشغل يبوظ؟ حد يختفي؟</td></tr>
+        <tr><td>3</td><td>مساكن حلّت التلاتة. <span class="ost"><b>١</b> — الأسعار قدامك من الأول، بند بند</span></td></tr>
+        <tr><td>4</td><td><b>٢</b> — مهندس مدني بيشرف على التنفيذ من أول يوم لحد التسليم</td></tr>
+        <tr><td>5</td><td><b>٣</b> — الدفع عند الاستلام. مش قبله.</td></tr>
+        <tr><td>6 — CTA</td><td>افتح التطبيق، اختار البند، وابعت طلبك على واتساب في دقيقة. <span class="ost">الرابط في البايو 👆</span></td></tr>
+      </table></div>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capCar">نسخ</button></div>
+        <pre id="capCar">تشطيب الشقة بياخد من الناس صحتها قبل فلوسها 😮‍💨
+
+عشان كده عملنا تطبيق مساكن:
+✅ سعر كل بند قدامك قبل ما تبدأ — دهانات، أرضيات، جبس بورد، كهرباء، سباكة، أبواب وشبابيك، مطابخ، حمامات
+✅ مهندس مدني بيتابع التنفيذ خطوة بخطوة
+✅ الدفع عند الاستلام
+✅ الطلب كله من موبايلك، وبيوصلنا على واتساب على طول
+
+جرّب دلوقتي — الرابط في البايو 👆
+
+#تشطيبات #تشطيب_شقق #تشطيب_شقتك #ديكور #التجمع_الخامس #الشيخ_زايد #العاصمة_الادارية #مساكن</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 03 ============ -->
+  <h2 id="reel1"><span class="en">03 / reel</span>ريل — المشكلة والحل</h2>
+  <div class="unit">
+    <div class="unit-hd"><span class="tag reel">Reel</span><span class="title">«لو بتشطّب شقتك دلوقتي»</span><span class="meta">~25 ثانية · رأسي 9:16</span></div>
+    <div class="unit-body">
+      <p><strong>الهدف:</strong> إن اللي بيتفرّج يحس إنك فاهم وجعه في أول 3 ثواني، وبعدين تريه الحل بسرعة.</p>
+      <div class="wide"><table class="scenes">
+        <tr><th>الوقت</th><th>الصورة + النص</th></tr>
+        <tr><td>0:00–0:03<br>الهوك</td><td>حد قاعد وسط شقة نص تشطيب، بيبص في الموبايل — مكالمات كتير مش مردود عليها.
+          <span class="ost"><b>نص على الشاشة:</b> «المقاول قالك أسبوع… وبقاله شهر؟»</span></td></tr>
+        <tr><td>0:03–0:08<br>المشكلة</td><td>كتات سريعة: دهان متشقق · سيراميك غلط · ورقة فيها أرقام مشخبطة.
+          <span class="ost"><b>تعليق صوتي:</b> «تشطيب الشقة مش لازم يبقى كابوس.»</span></td></tr>
+        <tr><td>0:08–0:18<br>الحل</td><td>تسجيل شاشة من التطبيق: يفتح → «دهانات» → السعر ظاهر «200 ج.م/م²» → يضيف للطلب → واتساب بيفتح برسالة جاهزة.
+          <span class="ost"><b>تعليق صوتي:</b> «من تطبيق مساكن: اختار البند، شوف السعر قبل ما تبدأ، وابعت طلبك.»</span></td></tr>
+        <tr><td>0:18–0:23<br>الثقة</td><td>لقطة حقيقية للمهندس في الموقع بيراجع شغل.
+          <span class="ost"><b>نص على الشاشة:</b> «مهندس مدني بيشرف لحد التسليم — والدفع عند الاستلام»</span></td></tr>
+        <tr><td>0:23–0:25<br>CTA</td><td>شعار مساكن + «جرّبه دلوقتي — الرابط في البايو»</td></tr>
+      </table></div>
+      <div class="callout"><b>صوت:</b> تعليق صوتي هادي بلهجة مصرية + مزيكا خفيفة. لو مش هتسجّل صوت، النص على الشاشة لوحده بيكفي — أغلب الناس بتتفرّج من غير صوت.</div>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capR1">نسخ</button></div>
+        <pre id="capR1">أوعى حد يقنعك إن التشطيب لازم يبقى صداع 😮‍💨
+
+مع مساكن:
+▪️ السعر قدامك قبل ما تبدأ
+▪️ مهندس مدني بيتابع كل بند
+▪️ تدفع بعد ما تستلم وتطمن
+
+ابدأ طلبك من الموبايل — الرابط في البايو.
+#تشطيبات #تشطيب_شقق #مساكن #ديكورات #تشطيب_شقة_الجواز</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 04 ============ -->
+  <h2 id="reel2"><span class="en">04 / reel</span>ريل — جولة سريعة في التطبيق</h2>
+  <div class="unit">
+    <div class="unit-hd"><span class="tag reel">Reel</span><span class="title">«الطلب بياخد دقيقة»</span><span class="meta">~20 ثانية · تسجيل شاشة</span></div>
+    <div class="unit-body">
+      <p><strong>كله تسجيل شاشة</strong> للتطبيق، مع نص بيظهر مع كل خطوة. تصوير سريع، أصابع بتلمس الشاشة.</p>
+      <div class="wide"><table class="scenes">
+        <tr><th>الخطوة</th><th>على الشاشة</th></tr>
+        <tr><td>1</td><td>يفتح التطبيق → يختار «الدخول كضيف». <span class="ost"><b>نص:</b> «من غير تسجيل — ادخل على طول»</span></td></tr>
+        <tr><td>2</td><td>يدوس على «مطابخ» ثم «جبس بورد» ويوري الأسعار. <span class="ost"><b>نص:</b> «كل بند وسعره واضح»</span></td></tr>
+        <tr><td>3</td><td>يضيف بندين للطلب ويروح لـ «طلبي». <span class="ost"><b>نص:</b> «اختار اللي محتاجه»</span></td></tr>
+        <tr><td>4</td><td>يكتب العنوان والموبايل ويدوس «إرسال». واتساب بيفتح برسالة جاهزة. <span class="ost"><b>نص:</b> «وابعت — بيوصلنا على واتساب فورًا»</span></td></tr>
+        <tr><td>5</td><td>شاشة التأكيد + «هيتصل بيك مهندس». <span class="ost"><b>نص:</b> «مهندس هيكلمك ويأكد السعر والميعاد»</span></td></tr>
+      </table></div>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capR2">نسخ</button></div>
+        <pre id="capR2">دقيقة واحدة وطلب التشطيب بيوصلنا 👇
+افتح التطبيق ← اختار البند ← شوف السعر ← ابعت على واتساب.
+ومهندس بيكلمك يأكد كل حاجة.
+
+الرابط في البايو.
+#مساكن #تشطيبات #تطبيق_تشطيب #تشطيب_شقق</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 05 ============ -->
+  <h2 id="posts"><span class="en">05 / single posts</span>بوستات صورة واحدة</h2>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag post">Post</span><span class="title">A — السعر واضح</span></div>
+    <div class="unit-body">
+      <p>جرافيك نضيف: اسم البند + السعر كبير + سطر «شامل الخامة». نفس ستايل التطبيق.</p>
+      <p style="direction:rtl"><b>على الصورة:</b> «دهان بلاستيك سوبر لوكس — 200 ج.م/م² · شامل المعجون والخامة. مفيش مفاجآت في الآخر.»</p>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capPA">نسخ</button></div>
+        <pre id="capPA">أكتر سؤال بيتسأل في التشطيب: «هيطلع بكام؟»
+عندنا السعر مكتوب قدامك قبل ما تبدأ — لكل بند. تدخل التطبيق تشوف وتحسب بنفسك.
+
+الرابط في البايو 👆
+#تشطيبات #اسعار_التشطيب #مساكن #تشطيب_شقق</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag post">Post</span><span class="title">B — المهندس</span></div>
+    <div class="unit-body">
+      <p>صورة حقيقية لـ م. مصطفى غنيم في موقع شغل — بيراجع، بيقيس، بيتكلم مع عامل.</p>
+      <p style="direction:rtl"><b>على الصورة:</b> «مش هنسيبك لوحدك مع العمال.»</p>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capPB">نسخ</button></div>
+        <pre id="capPB">الفرق مش في العمالة — الفرق في حد بيشرف.
+م. مصطفى غنيم، مهندس مدني، بيتابع تشطيب شقتك بند بند لحد ما تستلم الشغل وأنت مطمن.
+
+اطلب من التطبيق — الرابط في البايو.
+#اشراف_هندسي #تشطيبات #مساكن #مقاول_تشطيب</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag post">Post</span><span class="title">C — الدفع عند الاستلام</span></div>
+    <div class="unit-body">
+      <p>جرافيك بسيط، سؤال وجواب.</p>
+      <p style="direction:rtl"><b>على الصورة:</b> «بتدفع إمتى؟ — بعد ما تشوف الشغل خلص وعجبك. مش قبل كده.»</p>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capPC">نسخ</button></div>
+        <pre id="capPC">قاعدة واحدة عندنا: الفلوس بعد الشغل.
+بتعاين، بتتأكد إن كل حاجة زي ما اتفقنا، وبعدين بتدفع. كده الطرفين مطمنين.
+
+#الدفع_عند_الاستلام #تشطيبات #مساكن #ثقة</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag post">Post</span><span class="title">D — تسليط الضوء على بند (جبس بورد / مطابخ)</span></div>
+    <div class="unit-body">
+      <p>قبل / بعد لسقف جبس بورد بإضاءة مخفية، أو مطبخ HPL متعمل. السعر في الركن.</p>
+      <div class="copyblock">
+        <div class="cb-hd"><span class="cb-label">caption</span><button class="copy" data-t="capPD">نسخ</button></div>
+        <pre id="capPD">سقف جبس بورد بإضاءة مخفية — من شغلنا.
+تصميم على مزاجك، تنفيذ تحت إشراف مهندس، وسعر المتر واضح في التطبيق.
+
+عايز نفس الشكل في شقتك؟ الرابط في البايو.
+#جبس_بورد #ديكور_اسقف #تشطيبات #مساكن</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 06 ============ -->
+  <h2 id="story"><span class="en">06 / stories</span>سلسلة ستوري (5 فريمات)</h2>
+  <div class="unit">
+    <div class="unit-hd"><span class="tag story">Stories</span><span class="title">تُنشر على مدار اليوم</span></div>
+    <div class="unit-body">
+      <ol>
+        <li><strong>فريم 1:</strong> «شقة جديدة؟ 👀» — لقطة سريعة لشقة على الطوب الأحمر.</li>
+        <li><strong>فريم 2:</strong> «خزّن الأسعار الأول 📌» — سكرين شوت لصفحة الدهانات أو الأرضيات في التطبيق.</li>
+        <li><strong>فريم 3 (تفاعل):</strong> استطلاع — «أكتر بند بيوجع الدماغ في التشطيب؟» → السباكة / الدهانات / المطابخ.</li>
+        <li><strong>فريم 4:</strong> «اطلب من التطبيق، ومهندس هيكلمك يأكد كل حاجة» — تسجيل شاشة قصير للطلب.</li>
+        <li><strong>فريم 5 (CTA):</strong> «ابدأ دلوقتي» + ستيكر الرابط.</li>
+      </ol>
+      <div class="callout">ثبّت الستوري دي في <b>هايلايت</b> اسمه «التطبيق» أو «ازاي تطلب» عشان يفضل ظاهر لأي حد يدخل البروفايل.</div>
+    </div>
+  </div>
+
+  <!-- ============ 07 ============ -->
+  <h2 id="ads"><span class="en">07 / paid</span>نصوص الإعلان المموّل</h2>
+  <p>لما تعمل «Boost» أو إعلان من Meta Ads Manager. النسخة القصيرة أهم من الطويلة.</p>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag ad">Paid</span><span class="title">إعلان 1 — بيبدأ بالمشكلة</span></div>
+    <div class="unit-body">
+      <div class="copyblock"><div class="cb-hd"><span class="cb-label">primary text</span><button class="copy" data-t="ad1p">نسخ</button></div>
+        <pre id="ad1p">تشطيب شقتك بسعر واضح، ومن غير مقاول يختفي.
+تطبيق مساكن: اختار البند ← شوف السعر ← ابعت طلبك على واتساب.
+مهندس مدني بيشرف، والدفع عند الاستلام.</pre></div>
+      <div class="copyblock"><div class="cb-hd"><span class="cb-label">headline</span><button class="copy" data-t="ad1h">نسخ</button></div>
+        <pre id="ad1h">تشطيب بإشراف مهندس — من موبايلك</pre></div>
+      <div class="copyblock"><div class="cb-hd"><span class="cb-label">description / CTA</span><button class="copy" data-t="ad1d">نسخ</button></div>
+        <pre id="ad1d">جرّب دلوقتي · الدفع عند الاستلام</pre></div>
+    </div>
+  </div>
+
+  <div class="unit">
+    <div class="unit-hd"><span class="tag ad">Paid</span><span class="title">إعلان 2 — بيبدأ بالثقة</span></div>
+    <div class="unit-body">
+      <div class="copyblock"><div class="cb-hd"><span class="cb-label">primary text</span><button class="copy" data-t="ad2p">نسخ</button></div>
+        <pre id="ad2p">إشراف مهندس مدني على تشطيب شقتك، وأسعار كل بند قدامك من الأول.
+افتح تطبيق مساكن وابدأ طلبك في دقيقة — دهانات، أرضيات، جبس بورد، كهرباء، سباكة، مطابخ، حمامات.</pre></div>
+      <div class="copyblock"><div class="cb-hd"><span class="cb-label">headline</span><button class="copy" data-t="ad2h">نسخ</button></div>
+        <pre id="ad2h">أسعار واضحة · إشراف هندسي · دفع عند الاستلام</pre></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>الاستهداف المقترح:</b> القاهرة + الجيزة · 25–40 سنة · اهتمامات: تشطيبات / ديكور / أثاث / عقارات / كمبوندات (التجمّع، زايد، العاصمة). ابدأ بميزانية صغيرة على أكتر من إعلان وشوف أنهي واحد بيجيب رسايل أكتر، وبعدين زوّد عليه.
+  </div>
+
+  <!-- ============ 08 ============ -->
+  <h2 id="hashtags"><span class="en">08 / hashtags</span>بنك الهاشتاجات</h2>
+  <h3>وصول واسع</h3>
+  <div class="hashbank"><span>#تشطيبات</span><span>#تشطيب</span><span>#ديكور</span><span>#ديكورات</span><span>#تصميم_داخلي</span><span>#دهانات</span><span>#جبس_بورد</span><span>#مطابخ</span></div>
+  <h3>نيّة شراء / موضوع</h3>
+  <div class="hashbank"><span>#تشطيب_شقق</span><span>#تشطيب_شقتك</span><span>#تشطيب_شقة_الجواز</span><span>#اسعار_التشطيب</span><span>#مقاول_تشطيب</span><span>#اشراف_هندسي</span><span>#تشطيب_علي_الطوب_الاحمر</span></div>
+  <h3>محلي</h3>
+  <div class="hashbank"><span>#التجمع_الخامس</span><span>#الشيخ_زايد</span><span>#6_اكتوبر</span><span>#العاصمة_الادارية</span><span>#مدينتي</span><span>#القاهرة_الجديدة</span><span>#مصر</span></div>
+  <h3>العلامة</h3>
+  <div class="hashbank"><span>#مساكن</span><span>#مساكن_للتشطيبات</span></div>
+  <div class="callout">اختار <b>8–12 هاشتاج</b> للبوست الواحد: امزج من التلات مجموعات. حط هاشتاج العلامة في كل بوست عشان تبني وسم خاص بيك.</div>
+
+  <!-- ============ 09 ============ -->
+  <h2 id="week"><span class="en">09 / cadence</span>خطة أول أسبوع</h2>
+  <div class="week">
+    <div class="day"><div class="d">اليوم 1</div><div class="w">الإطلاق</div><p>كاروسيل الإطلاق + سلسلة الستوري كاملة. ثبّت الرابط في البايو.</p></div>
+    <div class="day"><div class="d">اليوم 2</div><div class="w">ريل المشكلة</div><p>ريل «لو بتشطّب شقتك دلوقتي». ده اللي المفروض يوصل لأكبر عدد.</p></div>
+    <div class="day"><div class="d">اليوم 3</div><div class="w">بوست المهندس</div><p>بوست B + ستوري خلف الكواليس من موقع شغل.</p></div>
+    <div class="day"><div class="d">اليوم 4</div><div class="w">ريل الجولة</div><p>ريل «الطلب بياخد دقيقة» — تسجيل شاشة.</p></div>
+    <div class="day"><div class="d">اليوم 5</div><div class="w">بوست السعر</div><p>بوست A (السعر واضح) + استطلاع ستوري عن أكتر بند بيقلق الناس.</p></div>
+    <div class="day"><div class="d">اليوم 6</div><div class="w">شغل حقيقي</div><p>بوست D — قبل/بعد من مشروع حقيقي. أقوى إثبات.</p></div>
+    <div class="day"><div class="d">اليوم 7</div><div class="w">تفاعل</div><p>ردّ على كل كومنت ورسالة. بوست «اسألني أي حاجة عن التشطيب» في الستوري.</p></div>
+  </div>
+  <div class="callout">بعد الأسبوع: خُد أحسن 1–2 بوست من ناحية الوصول والرسايل، واعملهم <b>Boost</b> بميزانية صغيرة. الإعلان المدفوع بيشتغل أحسن على محتوى ثبت إنه بيشد الناس.</div>
+
+  <!-- ============ 10 ============ -->
+  <h2 id="assets"><span class="en">10 / prep</span>اللي محتاج تجهّزه</h2>
+  <ul class="check">
+    <li><strong>تسجيل شاشة للتطبيق</strong> — رحلة كاملة: الدخول كضيف ← اختيار بند ← ظهور السعر ← الطلب ← فتح واتساب ← شاشة التأكيد. سجّل نضيف من غير لخبطة.</li>
+    <li><strong>3–5 صور لمشروع حقيقي خلص</strong> — ويا ريت «قبل» و«بعد» لنفس الزاوية.</li>
+    <li><strong>لقطة قصيرة (10–15 ث) للمهندس في الموقع</strong> — بيراجع أو بيقيس.</li>
+    <li><strong>ملفات الشعار</strong> — نسخة على خلفية فاتحة وواحدة على غامقة.</li>
+    <li><strong>الرابط اللي هتحطه في البايو</strong> — دلوقتي <code>masakeneg.github.io/masaken-app</code>. لو هتعمل إعلانات، يفضّل دومين مختصر (زي <code>app.masakeneg.com</code>) — أنضف وأسهل يتكتب.</li>
+    <li><strong>رقم واتساب للأعمال</strong> — موجود في التطبيق (<code>201202992442</code>). فعّل عليه الرد السريع والكتالوج لو تقدر.</li>
+    <li><strong>هوية بصرية بسيطة</strong> — لون شاركول، لون كريمي، لون دهبي (برَص)، وخط عربي واحد ثابت. استخدمها في كل جرافيك عشان الصفحة تبقى شكلها واحد.</li>
+  </ul>
+
+  <hr>
+
+  <footer>
+    كله مبني على الرسائل اللي في التطبيق نفسه — لو غيّرت حاجة في الأسعار أو الخدمات، حدّث المحتوى بنفس النبرة. عايز أظبطلك جرافيك للبوستات أو أعملك نسخة فيديو فعلية من السكريبتات دي؟ قولّي.
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el = document.getElementById(btn.getAttribute('data-t'));
+    if(!el) return;
+    var text = el.textContent;
+    navigator.clipboard.writeText(text).then(function(){
+      var old = btn.textContent;
+      btn.textContent = 'اتنسخ ✓'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+    }).catch(function(){
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  });
+});
+</script>
