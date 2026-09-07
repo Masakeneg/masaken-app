@@ -1,0 +1,8 @@
+# nothing secret lives in this repo (see public/config.js for why),
+# but keep the usual noise out.
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
+.netlify/
+.vercel/

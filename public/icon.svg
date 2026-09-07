@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Masaken">
+  <rect width="512" height="512" rx="96" fill="#1C1C1A"/>
+  <g fill="none" stroke="#A97B35" stroke-width="14">
+    <path d="M96 300 V150 M96 150 H150 M416 300 V150 M416 150 H362"/>
+  </g>
+  <circle cx="256" cy="232" r="120" fill="none" stroke="#C9A05C" stroke-width="16"/>
+  <text x="256" y="232" text-anchor="middle" dominant-baseline="central"
+        font-family="'IBM Plex Sans Arabic','Cairo',sans-serif" font-weight="700"
+        font-size="150" fill="#F6F1E7">م</text>
+  <rect x="126" y="392" width="260" height="16" fill="#A97B35"/>
+</svg>
