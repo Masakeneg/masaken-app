@@ -768,9 +768,35 @@ function brandTap(){
   }
 }
 
+// Drop a session whose account no longer exists / whose token is invalid.
+// Without this a dead token (deleted account, revoked JWT) would block both
+// signing in AND placing orders. Network errors are left alone.
+function isDeadAuthError(error){
+  if (!error) return false;
+  if (error.status === 401 || error.status === 403) return true;
+  return /jwt|sub claim|does not exist|user.*not.*found|invalid|expired|refresh/i.test(error.message || '');
+}
+async function clearDeadSession(){
+  if (!sb) return;
+  try{
+    const { error } = await sb.auth.getUser();
+    if (isDeadAuthError(error)){
+      await sb.auth.signOut();
+      try{ Object.keys(localStorage).filter(k => k.startsWith('sb-')).forEach(k => localStorage.removeItem(k)); }catch(e){}
+    }
+  }catch(e){ /* offline — keep the session */ }
+}
+
 async function currentSession(){
   if (!sb) return null;
   const { data: { session } } = await sb.auth.getSession();
+  if (!session) return null;
+  const { error } = await sb.auth.getUser();
+  if (isDeadAuthError(error)){
+    await sb.auth.signOut();
+    try{ Object.keys(localStorage).filter(k => k.startsWith('sb-')).forEach(k => localStorage.removeItem(k)); }catch(e){}
+    return null;
+  }
   return session;
 }
 async function currentIsAdmin(){
@@ -882,7 +908,8 @@ function renderAuthForm(body){
     </div>
     <button class="primary-btn" onclick="custSubmit()">${authMode === 'signup' ? 'إنشاء حساب' : 'دخول'}</button>
     <div id="cust-err" class="note-box" style="display:none; color:var(--danger);"></div>
-    <div class="note-box">تقدر تطلب من غير حساب — الحساب بس عشان تتابع حالة طلباتك.</div>
+    <div class="note-box">الحساب اختياري — بيخليك تتابع حالة طلباتك. تقدر تطلب من غير حساب.</div>
+    <button class="ghost-btn" onclick="goHome()">تصفّح المنتجات كضيف</button>
   `;
 }
 
@@ -1042,12 +1069,14 @@ if (sb){
     }
     if (document.getElementById('screen-profile').classList.contains('active')) renderProfile();
   });
-  // On first load, pick up an existing customer session's phone for checkout.
-  currentSession().then((s) => {
+  // On first load: throw away any dead token (deleted account / stale JWT) so it
+  // never blocks signing in or ordering — then pick up a valid session's phone.
+  clearDeadSession().then(currentSession).then((s) => {
     if (s){
       const p = phoneFromEmail(s.user.email);
       if (/^0\d{9,}$/.test(p)) myPhone = p;
     }
+    if (document.getElementById('screen-profile').classList.contains('active')) renderProfile();
   });
 }
 
