@@ -1,0 +1,14 @@
+// Cloudflare deploy config. Cloudflare Workers serves the app at
+// masaken-app.<account>.workers.dev and is reachable in Egypt (unlike
+// netlify.app). Auto-deploys from `master`, same as GitHub Pages and Netlify.
+//
+// This is a static-assets-only Worker: no server code, it just serves the
+// files in public/. Ignored by Netlify and GitHub Pages.
+{
+  "name": "masaken-app",
+  "compatibility_date": "2026-09-07",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "single-page-application"
+  }
+}
